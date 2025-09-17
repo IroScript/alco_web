@@ -1,0 +1,458 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Alco Pharma - Company Overview</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+        
+        body {
+            font-family: "Inter", sans-serif;
+            margin: 0;
+            padding: 0;
+            min-height: 100vh;
+            position: relative;
+            color: #fff;
+            background: #1a1a1a;
+        }
+
+        /* Ultra smooth animated gradient background */
+        .gradient-background {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(
+                135deg,
+                #2a9d8f 0%,
+                #2a9d8f 25%,
+                #264653 50%,
+                #264653 75%,
+                #2a9d8f 100%
+            );
+            background-size: 400% 400%;
+            animation: gradientShift 12s ease-in-out infinite;
+            z-index: 0;
+        }
+
+        @keyframes gradientShift {
+            0% { background-position: 0% 50%; }
+            25% { background-position: 100% 50%; }
+            50% { background-position: 100% 50%; }
+            75% { background-position: 0% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        /* Floating geometric shapes */
+        .floating-shapes {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 1;
+            overflow: hidden;
+        }
+
+        .shape {
+            position: absolute;
+            opacity: 0.1;
+            animation: float 20s linear infinite;
+        }
+
+        .shape:nth-child(1) {
+            width: 80px;
+            height: 80px;
+            background: rgba(135, 206, 235, 0.3);
+            border-radius: 50%;
+            top: 10%;
+            left: 10%;
+            animation-delay: 0s;
+            animation-duration: 25s;
+        }
+
+        .shape:nth-child(2) {
+            width: 60px;
+            height: 60px;
+            background: rgba(135, 206, 235, 0.2);
+            border-radius: 30%;
+            top: 60%;
+            right: 20%;
+            animation-delay: -5s;
+            animation-duration: 30s;
+        }
+
+        .shape:nth-child(3) {
+            width: 100px;
+            height: 100px;
+            background: rgba(135, 206, 235, 0.15);
+            border-radius: 20%;
+            bottom: 20%;
+            left: 30%;
+            animation-delay: -10s;
+            animation-duration: 35s;
+        }
+
+        .shape:nth-child(4) {
+            width: 40px;
+            height: 40px;
+            background: rgba(135, 206, 235, 0.25);
+            border-radius: 50%;
+            top: 30%;
+            right: 40%;
+            animation-delay: -15s;
+            animation-duration: 28s;
+        }
+
+        @keyframes float {
+            0% { transform: translateY(0px) rotate(0deg); }
+            25% { transform: translateY(-20px) rotate(90deg); }
+            50% { transform: translateY(-10px) rotate(180deg); }
+            75% { transform: translateY(-30px) rotate(270deg); }
+            100% { transform: translateY(0px) rotate(360deg); }
+        }
+
+        /* Enhanced SVG background with modern patterns */
+        .svg-background {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 2;
+        }
+
+        .svg-background line,
+        .svg-background path {
+            stroke: rgba(135, 206, 235, 0.2);
+            stroke-width: 1;
+            fill: none;
+            animation: pulse 8s ease-in-out infinite;
+        }
+
+        .svg-background .enhanced-line {
+            stroke: rgba(135, 206, 235, 0.3);
+            stroke-width: 1.5;
+            animation: flow 15s linear infinite;
+        }
+
+        .svg-background .arrow {
+            fill: rgba(135, 206, 235, 0.3);
+            stroke: none;
+            animation: arrowPulse 6s ease-in-out infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 0.2; }
+            50% { opacity: 0.4; }
+        }
+
+        @keyframes flow {
+            0% { 
+                stroke-dasharray: 0 100;
+                stroke-dashoffset: 0;
+                opacity: 0.2;
+            }
+            50% { 
+                stroke-dasharray: 50 50;
+                stroke-dashoffset: -25;
+                opacity: 0.4;
+            }
+            100% { 
+                stroke-dasharray: 100 0;
+                stroke-dashoffset: -100;
+                opacity: 0.2;
+            }
+        }
+
+        @keyframes arrowPulse {
+            0%, 100% { 
+                opacity: 0.3;
+                transform: scale(1);
+            }
+            50% { 
+                opacity: 0.6;
+                transform: scale(1.1);
+            }
+        }
+
+        /* Subtle particle effect */
+        .particle {
+            position: absolute;
+            width: 2px;
+            height: 2px;
+            background: rgba(135, 206, 235, 0.6);
+            border-radius: 50%;
+            animation: particleFloat 12s linear infinite;
+        }
+
+        .particle:nth-child(odd) {
+            animation-delay: -6s;
+        }
+
+        @keyframes particleFloat {
+            0% {
+                transform: translateY(100vh) translateX(0);
+                opacity: 0;
+            }
+            10% {
+                opacity: 1;
+            }
+            90% {
+                opacity: 1;
+            }
+            100% {
+                transform: translateY(-100px) translateX(200px);
+                opacity: 0;
+            }
+        }
+
+        /* Content styling */
+        .content {
+            position: relative;
+            z-index: 10;
+            min-height: 100vh;
+            padding: 2rem;
+        }
+
+        .glass-card {
+            background: rgba(255, 255, 255, 0.08);
+            backdrop-filter: blur(20px);
+            border-radius: 20px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+            padding: 2rem;
+            margin: 1rem 0;
+            animation: cardSlideIn 0.8s ease-out;
+        }
+
+        @keyframes cardSlideIn {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .pill-image {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+            border-radius: 15px;
+            margin-bottom: 1.5rem;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+        }
+
+        .brand-logo {
+            width: 120px;
+            height: 60px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0.5rem;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            transition: all 0.3s ease;
+        }
+
+        .brand-logo:hover {
+            background: rgba(255, 255, 255, 0.15);
+            transform: translateY(-2px);
+        }
+
+        .section-title {
+            color: #87CEEB;
+            font-size: 1.5rem;
+            font-weight: 600;
+            margin-bottom: 1rem;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+
+        .hero-title {
+            font-size: 3rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+            background: linear-gradient(135deg, #87CEEB, #ffffff);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .description-text {
+            line-height: 1.8;
+            color: rgba(255, 255, 255, 0.9);
+            margin-bottom: 1.5rem;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1.5rem;
+            margin: 2rem 0;
+        }
+
+        .stat-card {
+            background: rgba(135, 206, 235, 0.1);
+            padding: 1.5rem;
+            border-radius: 15px;
+            text-align: center;
+            border: 1px solid rgba(135, 206, 235, 0.2);
+            transition: all 0.3s ease;
+        }
+
+        .stat-card:hover {
+            background: rgba(135, 206, 235, 0.15);
+            transform: translateY(-5px);
+        }
+
+        .stat-number {
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: #87CEEB;
+            display: block;
+        }
+
+        .stat-label {
+            font-size: 0.9rem;
+            color: rgba(255, 255, 255, 0.8);
+            margin-top: 0.5rem;
+        }
+    </style>
+</head>
+<body>
+    <!-- Animated gradient background -->
+    <div class="gradient-background"></div>
+
+    <!-- Floating geometric shapes -->
+    <div class="floating-shapes">
+        <div class="shape"></div>
+        <div class="shape"></div>
+        <div class="shape"></div>
+        <div class="shape"></div>
+        <!-- Particle effects -->
+        <div class="particle" style="left: 10%; animation-delay: 0s;"></div>
+        <div class="particle" style="left: 20%; animation-delay: -2s;"></div>
+        <div class="particle" style="left: 30%; animation-delay: -4s;"></div>
+        <div class="particle" style="left: 40%; animation-delay: -6s;"></div>
+        <div class="particle" style="left: 50%; animation-delay: -8s;"></div>
+        <div class="particle" style="left: 60%; animation-delay: -10s;"></div>
+        <div class="particle" style="left: 70%; animation-delay: -12s;"></div>
+        <div class="particle" style="left: 80%; animation-delay: -14s;"></div>
+        <div class="particle" style="left: 90%; animation-delay: -16s;"></div>
+    </div>
+
+    <!-- Enhanced SVG background -->
+    <div class="svg-background">
+        <svg width="100%" height="100%" viewBox="0 0 1000 600" preserveAspectRatio="xMidYMid slice">
+            <!-- Modern flowing lines -->
+            <path class="enhanced-line" d="M 0 300 Q 250 200, 500 300 T 1000 300" stroke-width="2" style="opacity: 0.3;"></path>
+            <path class="enhanced-line" d="M 0 200 Q 333 100, 666 200 T 1000 200" stroke-width="1.5" style="opacity: 0.25;"></path>
+            <path class="enhanced-line" d="M 0 400 Q 200 500, 400 400 T 800 400 Q 900 350, 1000 400" stroke-width="1.8" style="opacity: 0.35;"></path>
+            
+            <!-- Vertical flowing lines -->
+            <path class="enhanced-line" d="M 200 0 Q 250 150, 200 300 T 200 600" stroke-width="1.2" style="opacity: 0.2;"></path>
+            <path class="enhanced-line" d="M 800 0 Q 750 200, 800 400 T 800 600" stroke-width="1.5" style="opacity: 0.3;"></path>
+            
+            <!-- Curved connecting paths -->
+            <path class="enhanced-line" d="M 0 100 C 300 50, 700 150, 1000 100" stroke-width="1" style="opacity: 0.2;"></path>
+            <path class="enhanced-line" d="M 0 500 C 400 450, 600 550, 1000 500" stroke-width="1.3" style="opacity: 0.28;"></path>
+            
+            <!-- Modern arrow indicators -->
+            <path class="arrow" d="M 490 295 L 510 300 L 490 305 Z" style="opacity: 0.4;"></path>
+            <path class="arrow" d="M 190 295 L 210 300 L 190 305 Z" style="opacity: 0.3;"></path>
+            <path class="arrow" d="M 790 395 L 810 400 L 790 405 Z" style="opacity: 0.35;"></path>
+            
+            <!-- Geometric accent elements -->
+            <circle cx="500" cy="300" r="3" fill="rgba(135, 206, 235, 0.4)" style="animation: pulse 4s ease-in-out infinite;"></circle>
+            <circle cx="200" cy="200" r="2" fill="rgba(135, 206, 235, 0.3)" style="animation: pulse 6s ease-in-out infinite;"></circle>
+            <circle cx="800" cy="400" r="2.5" fill="rgba(135, 206, 235, 0.35)" style="animation: pulse 5s ease-in-out infinite;"></circle>
+        </svg>
+    </div>
+
+    <!-- Content -->
+    <div class="content">
+        <div class="max-w-6xl mx-auto">
+            <!-- Hero Section -->
+            <div class="glass-card">
+                <div class="grid md:grid-cols-2 gap-8 items-center">
+                    <div>
+                        <h1 class="hero-title">ALCO PHARMA</h1>
+                        <p class="text-xl text-gray-300 mb-6">Leading Healthcare Innovation in Bangladesh</p>
+                        
+                        <div class="stats-grid">
+                            <div class="stat-card">
+                                <span class="stat-number">2,000+</span>
+                                <span class="stat-label">Dedicated Employees</span>
+                            </div>
+                            <div class="stat-card">
+                                <span class="stat-number">15+</span>
+                                <span class="stat-label">Years of Excellence</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div>
+                        <img src="data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAAYEBQYFBAYGBQYHBwYIChAKCgkJChQODwwQFxQYGBcUFhYaHSUfGhsjHBYWICwgIyYnKSopGR8tMC0oMCUoKSj/2wBDAQcHBwoIChMKChMoGhYaKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCj/wAARCAAyAEIDASIAAhEBAxEB/8QAHwAAAQUBAQEBAQEAAAAAAAAAAAECAwQFBgcICQoL/8QAtRAAAgEDAwIEAwUFBAQAAAF9AQIDAAQRBRIhMUEGE1FhByJxFDKBkaEII0KxwRVS0fAkM2JyggkKFhcYGRolJicoKSo0NTY3ODk6Q0RFRkdISUpTVFVWV1hZWmNkZWZnaGlqc3R1dnd4eXqDhIWGh4iJipKTlJWWl5iZmqKjpKWmp6ipqrKztLW2t7i5usLDxMXGx8jJytLT1NXW19jZ2uHi4+Tl5ufo6erx8vP09fb3+Pn6/8QAHwEAAwEBAQEBAQEBAQAAAAAAAAECAwQFBgcICQoL/8QAtREAAgECBAQDBAcFBAQAAQJ3AAECAxEEBSExBhJBUQdhcRMiMoEIFEKRobHBCSMzUvAVYnLRChYkNOEl8RcYGRomJygpKjU2Nzg5OkNERUZHSElKU1RVVldYWVpjZGVmZ2hpanN0dXZ3eHl6goOEhYaHiImKkpOUlZaXmJmaoqOkpaanqKmqsrO0tba3uLm6wsPExcbHyMnK0tPU1dbX2Nna4uPk5ebn6Onq8vP09fb3+Pn6/9oADAMBAAIRAxEAPwD3+iiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKAP//Z" alt="Colorful Pills" class="pill-image">
+                    </div>
+                </div>
+            </div>
+
+            <!-- Overview Section -->
+            <div class="glass-card">
+                <div class="grid md:grid-cols-3 gap-8">
+                    <div class="md:col-span-1">
+                        <h2 class="section-title">Overview</h2>
+                    </div>
+                    <div class="md:col-span-2">
+                        <p class="description-text">
+                            Alco Pharma Ltd is a fastest growing pharmaceutical company in Bangladesh with nearly 2,000 dedicated employees. We at Alco work to prevent and treat the diseases we know about, and to discover and develop treatments for the ones we don't. We are committed to develop safe and effective medicines for healthy living of patients and their families.
+                        </p>
+                        <p class="description-text">
+                            We at Alco Pharma Ltd, always believe in Quality never ends and refuse to settle for anything until it exceeds the existing standard.
+                        </p>
+                        <p class="description-text">
+                            Alco's activities underscore the Company's well-defined Mission to improve the quality of care and treatment of patients by providing effective therapies, products and specialized programs.
+                        </p>
+                        <p class="description-text">
+                            Alco Pharma Ltd and its people are working hand-in-hand to become one of the respected and leading pharmaceutical Company in Bangladesh.
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Brand Portfolio -->
+            <div class="glass-card">
+                <h2 class="section-title mb-6">Our Brand Portfolio</h2>
+                <div class="flex flex-wrap justify-center gap-4">
+                    <div class="brand-logo">
+                        <span class="text-pink-400 font-bold">Adnix</span>
+                    </div>
+                    <div class="brand-logo">
+                        <span class="text-purple-400 font-bold">alegra</span>
+                    </div>
+                    <div class="brand-logo">
+                        <span class="text-blue-400 font-bold">aloran</span>
+                    </div>
+                    <div class="brand-logo">
+                        <span class="text-green-400 font-bold">Effulyt</span>
+                    </div>
+                    <div class="brand-logo">
+                        <span class="text-blue-300 font-bold">Epizam</span>
+                    </div>
+                    <div class="brand-logo">
+                        <span class="text-green-500 font-bold">Esopra</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

@@ -1,0 +1,715 @@
+{% extends "base.html" %}
+{% block content %}
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ product.name }} Details</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700&family=Inter:wght@300;400;500;600&display=swap');
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Inter', sans-serif;
+            background: radial-gradient(ellipse at top, #0f1419 0%, #1a1f2e 40%, #0a0e13 100%);
+            color: #e8eaed;
+            min-height: 100vh;
+            position: relative;
+        }
+        
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: 
+                radial-gradient(circle at 20% 20%, #1e3a8a22 0%, transparent 50%),
+                radial-gradient(circle at 80% 80%, #7c2d1222 0%, transparent 50%),
+                radial-gradient(circle at 40% 70%, #065f4622 0%, transparent 50%);
+            pointer-events: none;
+            z-index: -1;
+        }
+        
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 40px 20px;
+        }
+        
+        .sliding-banner {
+            background: linear-gradient(135deg, #1e293b 0%, #334155 50%, #1e293b 100%);
+            border: 1px solid #334155;
+            backdrop-filter: blur(20px);
+            color: #f1f5f9;
+            padding: 20px;
+            margin: 40px 0;
+            border-radius: 20px;
+            overflow: hidden;
+            position: relative;
+            box-shadow: 
+                0 0 40px rgba(59, 130, 246, 0.15),
+                inset 0 1px 0 rgba(255, 255, 255, 0.1);
+        }
+        
+        .sliding-text {
+            animation: slide 20s linear infinite;
+            white-space: nowrap;
+            font-weight: 500;
+            font-size: 1.1rem;
+            letter-spacing: 0.5px;
+        }
+        
+        @keyframes slide {
+            0% { transform: translateX(100%); }
+            100% { transform: translateX(-100%); }
+        }
+        
+        .product-main {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 60px;
+            margin-bottom: 80px;
+            background: linear-gradient(135deg, #1e293b 0%, #334155 50%, #1e293b 100%);
+            backdrop-filter: blur(20px);
+            padding: 50px;
+            border-radius: 25px;
+            border: 1px solid #334155;
+            box-shadow: 
+                0 25px 50px rgba(0, 0, 0, 0.3),
+                0 0 60px rgba(59, 130, 246, 0.1),
+                inset 0 1px 0 rgba(255, 255, 255, 0.1);
+        }
+        
+        .product-images {
+            position: relative;
+        }
+        
+        .main-image {
+            width: 100%;
+            height: 450px;
+            border-radius: 20px;
+            object-fit: cover;
+            border: 1px solid #475569;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            background: linear-gradient(135deg, #1e293b 0%, #334155 100%);
+            box-shadow: 
+                0 20px 40px rgba(0, 0, 0, 0.3),
+                0 0 40px rgba(59, 130, 246, 0.1);
+        }
+        
+        .main-image:hover {
+            transform: scale(1.02);
+            box-shadow: 
+                0 25px 50px rgba(0, 0, 0, 0.4),
+                0 0 60px rgba(59, 130, 246, 0.2);
+        }
+        
+        .image-thumbnails {
+            display: flex;
+            gap: 15px;
+            margin-top: 20px;
+            overflow-x: auto;
+            padding: 10px 0;
+        }
+        
+        .thumbnail {
+            width: 90px;
+            height: 90px;
+            border-radius: 15px;
+            object-fit: cover;
+            cursor: pointer;
+            border: 2px solid #475569;
+            background: linear-gradient(135deg, #1e293b 0%, #334155 100%);
+            transition: all 0.3s ease;
+            flex-shrink: 0;
+        }
+        
+        .thumbnail:hover,
+        .thumbnail.active {
+            border-color: #3b82f6;
+            box-shadow: 
+                0 0 20px rgba(59, 130, 246, 0.4),
+                0 8px 16px rgba(0, 0, 0, 0.2);
+            transform: translateY(-3px);
+        }
+        
+        .product-info {
+            display: flex;
+            flex-direction: column;
+            gap: 30px;
+        }
+        
+        .product-title {
+            font-family: 'Playfair Display', serif;
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: #f8fafc;
+            margin-bottom: 15px;
+            line-height: 1.2;
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+        }
+        
+        .product-subtitle {
+            font-size: 1.2rem;
+            color: #cbd5e1;
+            margin-bottom: 25px;
+            line-height: 1.7;
+            font-weight: 400;
+        }
+        
+        .description-container {
+            position: relative;
+        }
+        
+        .description-text {
+            display: -webkit-box;
+            -webkit-line-clamp: 3;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            line-height: 1.7;
+            color: #e2e8f0;
+            font-size: 1.05rem;
+        }
+        
+        .description-text.expanded {
+            -webkit-line-clamp: unset;
+            overflow: visible;
+        }
+        
+        .expand-btn {
+            background: none;
+            border: none;
+            color: #60a5fa;
+            cursor: pointer;
+            font-weight: 600;
+            font-size: inherit;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            padding: 0;
+            margin: 0;
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+        }
+        
+        .expand-btn:hover {
+            color: #3b82f6;
+            text-shadow: 0 0 8px rgba(59, 130, 246, 0.5);
+            transform: scale(1.05);
+        }
+        
+        .expand-symbol {
+            font-size: 0.9em;
+            transition: transform 0.3s ease;
+        }
+        
+        .expand-btn:hover .expand-symbol {
+            transform: scale(1.2);
+        }
+        
+        .info-section {
+            background: linear-gradient(135deg, #334155 0%, #475569 50%, #334155 100%);
+            backdrop-filter: blur(20px);
+            padding: 30px;
+            border-radius: 20px;
+            border: 1px solid #475569;
+            box-shadow: 
+                0 10px 30px rgba(0, 0, 0, 0.2),
+                inset 0 1px 0 rgba(255, 255, 255, 0.1);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .info-section::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 4px;
+            height: 100%;
+            background: linear-gradient(to bottom, #3b82f6, #60a5fa);
+            border-radius: 0 2px 2px 0;
+        }
+        
+        .info-title {
+            font-family: 'Playfair Display', serif;
+            font-weight: 600;
+            color: #f8fafc;
+            margin-bottom: 15px;
+            font-size: 1.3rem;
+            text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
+        }
+        
+        .info-content {
+            line-height: 1.7;
+            color: #e2e8f0;
+            font-size: 1.05rem;
+            position: relative;
+        }
+        
+        .prescribing-info {
+            background: linear-gradient(135deg, #1e293b 0%, #334155 50%, #1e293b 100%);
+            backdrop-filter: blur(20px);
+            padding: 40px;
+            border-radius: 25px;
+            text-align: center;
+            margin-top: 30px;
+            border: 1px solid #334155;
+            box-shadow: 
+                0 20px 40px rgba(0, 0, 0, 0.3),
+                0 0 60px rgba(59, 130, 246, 0.1),
+                inset 0 1px 0 rgba(255, 255, 255, 0.1);
+        }
+        
+        .pdf-btn {
+            background: linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%);
+            color: #fff;
+            padding: 18px 40px;
+            border: none;
+            border-radius: 30px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-block;
+            box-shadow: 
+                0 8px 25px rgba(59, 130, 246, 0.3),
+                inset 0 1px 0 rgba(255, 255, 255, 0.2);
+            letter-spacing: 0.5px;
+        }
+        
+        .pdf-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 
+                0 12px 35px rgba(59, 130, 246, 0.4),
+                inset 0 1px 0 rgba(255, 255, 255, 0.3);
+            background: linear-gradient(135deg, #2563eb 0%, #1e40af 100%);
+        }
+        
+        .related-products {
+            margin-top: 80px;
+        }
+        
+        .section-title {
+            font-family: 'Playfair Display', serif;
+            font-size: 2.2rem;
+            font-weight: 700;
+            color: #f8fafc;
+            margin-bottom: 50px;
+            text-align: center;
+            position: relative;
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+        }
+        
+        .section-title::after {
+            content: '';
+            position: absolute;
+            bottom: -15px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 100px;
+            height: 4px;
+            background: linear-gradient(135deg, #3b82f6 0%, #60a5fa 100%);
+            border-radius: 2px;
+            box-shadow: 0 0 20px rgba(59, 130, 246, 0.5);
+        }
+        
+        .products-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 30px;
+        }
+        
+        .product-card {
+            background: linear-gradient(135deg, #1e293b 0%, #334155 50%, #1e293b 100%);
+            backdrop-filter: blur(20px);
+            border-radius: 25px;
+            overflow: hidden;
+            border: 1px solid #334155;
+            box-shadow: 
+                0 15px 35px rgba(0, 0, 0, 0.2),
+                0 0 40px rgba(59, 130, 246, 0.1),
+                inset 0 1px 0 rgba(255, 255, 255, 0.1);
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            cursor: pointer;
+        }
+        
+        .product-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 
+                0 25px 50px rgba(0, 0, 0, 0.3),
+                0 0 60px rgba(59, 130, 246, 0.2);
+        }
+        
+        .product-card-image {
+            width: 100%;
+            height: 220px;
+            object-fit: cover;
+            background: linear-gradient(135deg, #334155 0%, #475569 100%);
+            transition: transform 0.4s ease;
+        }
+        
+        .product-card:hover .product-card-image {
+            transform: scale(1.05);
+        }
+        
+        .product-card-content {
+            padding: 30px;
+        }
+        
+        .product-card-title {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.3rem;
+            font-weight: 600;
+            color: #f8fafc;
+            margin-bottom: 12px;
+            text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
+        }
+        
+        .product-card-desc {
+            color: #cbd5e1;
+            font-size: 1rem;
+            line-height: 1.6;
+            font-weight: 400;
+        }
+        
+        .fade-in {
+            animation: fadeIn 1s ease-in;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        @media (max-width: 768px) {
+            .product-main {
+                grid-template-columns: 1fr;
+                gap: 40px;
+                padding: 30px;
+            }
+            .product-title {
+                font-size: 2rem;
+            }
+            .products-grid {
+                grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            }
+        }
+        
+        .main-image.zoomable {
+            transition: transform 0.4s ease;
+            cursor: zoom-in;
+        }
+        
+        .main-image.zoomable:hover {
+            transform: scale(1.05);
+            z-index: 2;
+        }
+        
+        .slider-nav-btn {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            background: rgba(30, 41, 59, 0.8);
+            backdrop-filter: blur(10px);
+            border: 1px solid #475569;
+            color: #f8fafc;
+            border-radius: 50%;
+            width: 50px;
+            height: 50px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            font-size: 1.2rem;
+            transition: all 0.3s ease;
+            z-index: 10;
+        }
+        
+        .slider-nav-btn:hover {
+            background: rgba(59, 130, 246, 0.8);
+            transform: translateY(-50%) scale(1.1);
+            box-shadow: 0 0 20px rgba(59, 130, 246, 0.5);
+        }
+        
+        #prevImage {
+            left: 15px;
+        }
+        
+        #nextImage {
+            right: 15px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="sliding-banner">
+            <div class="sliding-text">
+                {{ banner_text|default:"Welcome to our Premium Product Collection - Excellence in Every Detail" }}
+            </div>
+        </div>
+        
+        <div class="product-main fade-in">
+            <div class="product-images">
+                <div class="slider-wrapper" style="position:relative;">
+                    {% if product.image %}
+                        <img class="main-image zoomable" id="mainProductImage" src="{{ product.image.url }}" alt="{{ product.name }}">
+                    {% elif images %}
+                        <img class="main-image zoomable" id="mainProductImage" src="{{ images.0.image.url }}" alt="{{ product.name }}">
+                    {% else %}
+                        <img class="main-image zoomable" id="mainProductImage" src="{% static 'images/default-product.png' %}" alt="No image">
+                    {% endif %}
+                    {% if images %}
+                        <button id="prevImage" class="slider-nav-btn">&#8592;</button>
+                        <button id="nextImage" class="slider-nav-btn">&#8594;</button>
+                    {% endif %}
+                </div>
+                <div class="image-thumbnails">
+                    {% if product.image %}
+                        <img src="{{ product.image.url }}" alt="Main image" class="thumbnail active" onclick="changeImage(this)">
+                    {% endif %}
+                    {% for img in images %}
+                        <img src="{{ img.image.url }}" alt="Product image" class="thumbnail" onclick="changeImage(this)">
+                    {% endfor %}
+                </div>
+            </div>
+            
+            <div class="product-info">
+                <h1 class="product-title">{{ product.name }}{% if product.generic_name %} <span style="font-size:1.2rem;color:#cbd5e1;font-weight:normal;">({{ product.generic_name }})</span>{% endif %}</h1>
+                
+                <div class="product-subtitle">
+                    <div class="description-container">
+                        <div class="description-text" id="productDescription">{{ product.description|safe }}</div>
+                    </div>
+                </div>
+                
+                <div class="info-section">
+                    <div class="info-title">Pack Size</div>
+                    <div class="info-content" id="packContent">{{ product.pack_size }}</div>
+                </div>
+                
+                <div class="info-section">
+                    <div class="info-title">Composition</div>
+                    <div class="info-content" id="compositionContent">{{ product.composition }}</div>
+                </div>
+                
+                <div class="info-section">
+                    <div class="info-title">Indication</div>
+                    <div class="info-content" id="indicationContent">{{ product.indication }}</div>
+                </div>
+                
+                <div class="info-section">
+                    <div class="info-title">Dosage</div>
+                    <div class="info-content" id="dosageContent">{{ product.dosage }}</div>
+                </div>
+                
+                <div class="prescribing-info">
+                    <p style="margin-bottom: 20px; font-weight: 600; font-size: 1.2rem;">Complete Prescribing Information</p>
+                    {% if product.pdf %}
+                        <a href="{{ product.pdf.url }}" class="pdf-btn" target="_blank">📄 View PDF Documentation</a>
+                    {% else %}
+                        <span style="color:#64748b;">No PDF documentation available.</span>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+        
+        <div class="related-products">
+            <h2 class="section-title">Related Therapeutic Class Products</h2>
+            <div class="products-grid">
+                {% for similar in similar_products %}
+                    <div class="product-card">
+                        <a href="{% url 'product_detail' similar.pk %}" style="text-decoration: none; color: inherit;">
+                            <div style="width:100%;height:220px;display:flex;align-items:center;justify-content:center;overflow:hidden;">
+                                {% if similar.image %}
+                                    <img src="{{ similar.image.url }}" alt="{{ similar.name }}" class="product-card-image" style="width:100%;height:100%;object-fit:contain;">
+                                {% else %}
+                                    <img src="{% static 'images/default-product.png' %}" alt="No image" class="product-card-image" style="width:100%;height:100%;object-fit:contain;">
+                                {% endif %}
+                            </div>
+                            <div class="product-card-content">
+                                <h3 class="product-card-title">{{ similar.name }}</h3>
+                                <p class="product-card-desc">{{ similar.generic_name }}</p>
+                            </div>
+                        </a>
+                    </div>
+                {% empty %}
+                    <p style="text-align: center; color: #64748b; font-size: 1.1rem;">No similar products found.</p>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        // Image slider logic
+        const images = Array.from(document.querySelectorAll('.image-thumbnails .thumbnail'));
+        let currentIndex = images.findIndex(img => img.classList.contains('active'));
+        
+        function showImage(idx) {
+            if (images.length === 0) return;
+            images.forEach(img => img.classList.remove('active'));
+            images[idx].classList.add('active');
+            document.getElementById('mainProductImage').src = images[idx].src;
+            currentIndex = idx;
+        }
+        
+        if (images.length > 0) {
+            document.getElementById('prevImage')?.addEventListener('click', function() {
+                showImage((currentIndex - 1 + images.length) % images.length);
+            });
+            document.getElementById('nextImage')?.addEventListener('click', function() {
+                showImage((currentIndex + 1) % images.length);
+            });
+        }
+        
+        function changeImage(el) {
+            const idx = images.indexOf(el);
+            if (idx !== -1) showImage(idx);
+        }
+
+        // Enhanced expand/collapse functionality with toggle feature
+        function addExpandCollapseFunctionality(containerId, originalText) {
+            const container = document.getElementById(containerId);
+            if (!container || !originalText) return;
+            
+            const lineHeight = parseInt(window.getComputedStyle(container).lineHeight);
+            const maxHeight = lineHeight * 3;
+            
+            // Check if content overflows 3 lines
+            if (container.scrollHeight > maxHeight) {
+                // Store original content and create unique ID for this section
+                const originalContent = container.innerHTML;
+                const uniqueId = containerId + '_toggle';
+                
+                // Create truncated version
+                const truncatedContent = createTruncatedContent(container, originalText, uniqueId, true);
+                container.innerHTML = truncatedContent;
+                
+                // Apply line clamp styles for truncated state
+                applyTruncatedStyles(container);
+                
+                // Store data for toggle functionality
+                container.dataset.originalContent = originalContent;
+                container.dataset.truncatedContent = truncatedContent;
+                container.dataset.isExpanded = 'false';
+            }
+        }
+        
+        function createTruncatedContent(container, originalText, uniqueId, isExpanded) {
+            // Create a temporary element to measure text
+            const tempDiv = document.createElement('div');
+            tempDiv.style.cssText = `
+                position: absolute;
+                visibility: hidden;
+                width: ${container.offsetWidth}px;
+                font-size: ${window.getComputedStyle(container).fontSize};
+                font-family: ${window.getComputedStyle(container).fontFamily};
+                line-height: ${window.getComputedStyle(container).lineHeight};
+                word-wrap: break-word;
+                overflow-wrap: break-word;
+            `;
+            document.body.appendChild(tempDiv);
+            
+            const lineHeight = parseInt(window.getComputedStyle(container).lineHeight);
+            const maxHeight = lineHeight * 3;
+            
+            // Find the text that fits in 3 lines
+            const words = originalText.split(' ');
+            let truncatedText = '';
+            let i = 0;
+            
+            const buttonHtml = isExpanded ? 
+                `<span class="expand-btn" onclick="toggleText('${container.id}')"><span class="expand-symbol">+</span> Expand</span>` :
+                `<span class="expand-btn" onclick="toggleText('${container.id}')"><span class="expand-symbol">−</span> Collapse</span>`;
+            
+            while (i < words.length) {
+                const testText = truncatedText + (truncatedText ? ' ' : '') + words[i];
+                tempDiv.innerHTML = testText + ' ' + buttonHtml;
+                
+                if (tempDiv.scrollHeight > maxHeight) {
+                    // Remove the last word and add button
+                    truncatedText = truncatedText.trim();
+                    break;
+                }
+                
+                truncatedText = testText;
+                i++;
+            }
+            
+            // Clean up
+            document.body.removeChild(tempDiv);
+            
+            return truncatedText + ' ' + buttonHtml;
+        }
+        
+        function applyTruncatedStyles(container) {
+            container.style.display = '-webkit-box';
+            container.style.webkitLineClamp = '3';
+            container.style.webkitBoxOrient = 'vertical';
+            container.style.overflow = 'hidden';
+        }
+        
+        function applyExpandedStyles(container) {
+            container.style.display = 'block';
+            container.style.webkitLineClamp = 'unset';
+            container.style.overflow = 'visible';
+        }
+        
+        // Function to toggle between expanded and collapsed states
+        function toggleText(containerId) {
+            const container = document.getElementById(containerId);
+            if (!container) return;
+            
+            const isExpanded = container.dataset.isExpanded === 'true';
+            
+            if (isExpanded) {
+                // Collapse: go back to truncated state
+                container.innerHTML = container.dataset.truncatedContent;
+                applyTruncatedStyles(container);
+                container.dataset.isExpanded = 'false';
+            } else {
+                // Expand: show full content with collapse button
+                const originalContent = container.dataset.originalContent;
+                const collapseButton = `<span class="expand-btn" onclick="toggleText('${containerId}')"><span class="expand-symbol">−</span> Collapse</span>`;
+                container.innerHTML = originalContent + ' ' + collapseButton;
+                applyExpandedStyles(container);
+                container.dataset.isExpanded = 'true';
+            }
+        }
+        
+        // Apply expand/collapse functionality to all sections
+        document.addEventListener('DOMContentLoaded', function() {
+            setTimeout(() => {
+                addExpandCollapseFunctionality('productDescription', '{{ product.description|safe }}');
+                addExpandCollapseFunctionality('packContent', '{{ product.pack_size }}');
+                addExpandCollapseFunctionality('compositionContent', '{{ product.composition }}');
+                addExpandCollapseFunctionality('indicationContent', '{{ product.indication }}');
+                addExpandCollapseFunctionality('dosageContent', '{{ product.dosage }}');
+            }, 100);
+        });
+        
+        // Reapply on window resize
+        window.addEventListener('resize', function() {
+            setTimeout(() => {
+                addExpandCollapseFunctionality('productDescription', '{{ product.description|safe }}');
+                addExpandCollapseFunctionality('packContent', '{{ product.pack_size }}');
+                addExpandCollapseFunctionality('compositionContent', '{{ product.composition }}');
+                addExpandCollapseFunctionality('indicationContent', '{{ product.indication }}');
+                addExpandCollapseFunctionality('dosageContent', '{{ product.dosage }}');
+            }, 100);
+        });
+    </script>
+</body>
+</html>
+{% endblock %}

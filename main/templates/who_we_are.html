@@ -1,0 +1,598 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Alco Pharma Ltd.</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: "Inter", sans-serif;
+            overflow-x: hidden;
+            position: relative;
+            background: #1a1a1a;
+        }
+
+        /* Ultra smooth animated gradient background */
+        .gradient-background {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(
+                135deg,
+                #2a9d8f 0%,
+                #2a9d8f 25%,
+                #264653 50%,
+                #264653 75%,
+                #2a9d8f 100%
+            );
+            background-size: 400% 400%;
+            animation: gradientShift 12s ease-in-out infinite;
+            z-index: -3;
+        }
+
+        @keyframes gradientShift {
+            0% { background-position: 0% 50%; }
+            25% { background-position: 100% 50%; }
+            50% { background-position: 100% 50%; }
+            75% { background-position: 0% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        /* Floating geometric shapes */
+        .floating-shapes {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -2;
+            overflow: hidden;
+        }
+
+        .shape {
+            position: absolute;
+            opacity: 0.1;
+            animation: float 20s linear infinite;
+        }
+
+        .shape:nth-child(1) {
+            width: 80px;
+            height: 80px;
+            background: rgba(135, 206, 235, 0.3);
+            border-radius: 50%;
+            top: 10%;
+            left: 10%;
+            animation-delay: 0s;
+            animation-duration: 25s;
+        }
+
+        .shape:nth-child(2) {
+            width: 60px;
+            height: 60px;
+            background: rgba(135, 206, 235, 0.2);
+            border-radius: 30%;
+            top: 60%;
+            right: 20%;
+            animation-delay: -5s;
+            animation-duration: 30s;
+        }
+
+        .shape:nth-child(3) {
+            width: 100px;
+            height: 100px;
+            background: rgba(135, 206, 235, 0.15);
+            border-radius: 20%;
+            bottom: 20%;
+            left: 30%;
+            animation-delay: -10s;
+            animation-duration: 35s;
+        }
+
+        .shape:nth-child(4) {
+            width: 40px;
+            height: 40px;
+            background: rgba(135, 206, 235, 0.25);
+            border-radius: 50%;
+            top: 30%;
+            right: 40%;
+            animation-delay: -15s;
+            animation-duration: 28s;
+        }
+
+        @keyframes float {
+            0% { transform: translateY(0px) rotate(0deg); }
+            25% { transform: translateY(-20px) rotate(90deg); }
+            50% { transform: translateY(-10px) rotate(180deg); }
+            75% { transform: translateY(-30px) rotate(270deg); }
+            100% { transform: translateY(0px) rotate(360deg); }
+        }
+
+        /* Enhanced SVG background with modern patterns */
+        .svg-background {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+        }
+
+        .svg-background line,
+        .svg-background path {
+            stroke: rgba(135, 206, 235, 0.2);
+            stroke-width: 1;
+            fill: none;
+            animation: pulse 8s ease-in-out infinite;
+        }
+
+        .svg-background .enhanced-line {
+            stroke: rgba(135, 206, 235, 0.3);
+            stroke-width: 1.5;
+            animation: flow 15s linear infinite;
+        }
+
+        .svg-background .arrow {
+            fill: rgba(135, 206, 235, 0.3);
+            stroke: none;
+            animation: arrowPulse 6s ease-in-out infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 0.2; }
+            50% { opacity: 0.4; }
+        }
+
+        @keyframes flow {
+            0% { 
+                stroke-dasharray: 0 100;
+                stroke-dashoffset: 0;
+                opacity: 0.2;
+            }
+            50% { 
+                stroke-dasharray: 50 50;
+                stroke-dashoffset: -25;
+                opacity: 0.4;
+            }
+            100% { 
+                stroke-dasharray: 100 0;
+                stroke-dashoffset: -100;
+                opacity: 0.2;
+            }
+        }
+
+        @keyframes arrowPulse {
+            0%, 100% { 
+                opacity: 0.3;
+                transform: scale(1);
+            }
+            50% { 
+                opacity: 0.6;
+                transform: scale(1.1);
+            }
+        }
+
+        /* Subtle particle effect */
+        .particle {
+            position: absolute;
+            width: 2px;
+            height: 2px;
+            background: rgba(135, 206, 235, 0.6);
+            border-radius: 50%;
+            animation: particleFloat 12s linear infinite;
+        }
+
+        .particle:nth-child(odd) {
+            animation-delay: -6s;
+        }
+
+        @keyframes particleFloat {
+            0% {
+                transform: translateY(100vh) translateX(0);
+                opacity: 0;
+            }
+            10% {
+                opacity: 1;
+            }
+            90% {
+                opacity: 1;
+            }
+            100% {
+                transform: translateY(-100px) translateX(200px);
+                opacity: 0;
+            }
+        }
+
+        /* Navbar styles */
+        .navbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1.275rem 2rem;
+            background: rgba(0, 0, 0, 0.2);
+            backdrop-filter: blur(10px);
+            position: sticky;
+            top: 0;
+            width: 100%;
+            z-index: 2000;
+            transition: padding 0.3s, height 0.3s;
+        }
+        
+        .navbar.shrink {
+            padding: 0.255rem 2rem;
+        }
+        
+        .logo {
+            font-size: 1.2rem;
+            font-weight: bold;
+            color: #3498db;
+            transition: font-size 0.3s, transform 0.2s;
+            transform: scale(1.3);
+        }
+        
+        .navbar.shrink .logo {
+            font-size: 1.2rem;
+            transform: scale(0.75);
+        }
+        
+        .logo-glow {
+            display: flex;
+            align-items: center;
+            padding: 0.2em 1.1em 0.2em 0.7em;
+            border-radius: 2em;
+            background: rgba(255, 255, 255, 0.85);
+            box-shadow: 0 0 24px 6px rgba(127, 208, 255, 0.15), 0 0 48px 12px rgba(182, 224, 255, 0.15);
+            backdrop-filter: blur(4px);
+            font-weight: bold;
+            font-size: 1.2rem;
+            color: #232a34;
+        }
+        
+        .nav-links {
+            display: flex;
+            list-style: none;
+            gap: 2rem;
+            position: relative;
+        }
+        
+        .nav-links a {
+            color: white;
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+        
+        .nav-links a:hover {
+            color: #3498db;
+        }
+        
+        .user-profile {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            color: white;
+        }
+        
+        .profile-img {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: #3498db;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+        }
+
+        /* Main content styles */
+        .main-content {
+            position: relative;
+            z-index: 1;
+            min-height: 100vh;
+            padding: 2rem;
+        }
+
+        .hero-section {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 3rem 0;
+            gap: 3rem;
+        }
+
+        .hero-image {
+            flex: 1;
+            max-width: 500px;
+        }
+
+        .hero-image img {
+            width: 100%;
+            height: auto;
+            border-radius: 20px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+        }
+
+        .hero-content {
+            flex: 1;
+            color: white;
+            padding: 2rem;
+        }
+
+        .section-title {
+            color: #3498db;
+            font-size: 2rem;
+            font-weight: 600;
+            margin-bottom: 1.5rem;
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+        }
+
+        .hero-text {
+            font-size: 1.1rem;
+            line-height: 1.8;
+            margin-bottom: 2rem;
+            text-align: justify;
+            color: rgba(255, 255, 255, 0.9);
+            text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
+        }
+
+        .page-number {
+            position: absolute;
+            bottom: 2rem;
+            right: 2rem;
+            background: rgba(139, 69, 139, 0.8);
+            color: white;
+            padding: 0.5rem 1rem;
+            border-radius: 50%;
+            font-weight: bold;
+            font-size: 1.2rem;
+            min-width: 50px;
+            text-align: center;
+        }
+
+        .products-section {
+            max-width: 1200px;
+            margin: 4rem auto 0;
+            padding: 0 2rem;
+        }
+
+        .products-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            margin-top: 2rem;
+        }
+
+        .product-card {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 2rem;
+            text-align: center;
+            transition: transform 0.3s, box-shadow 0.3s;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .product-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+        }
+
+        .product-name {
+            font-size: 1.5rem;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+            color: white;
+        }
+
+        .product-description {
+            color: rgba(255, 255, 255, 0.8);
+            font-size: 0.9rem;
+            margin-bottom: 1rem;
+        }
+
+        .product-logo {
+            width: 80px;
+            height: 80px;
+            background: white;
+            border-radius: 15px;
+            margin: 0 auto 1rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 1.2rem;
+            color: #333;
+        }
+
+        .amdin-plus {
+            background: linear-gradient(135deg, #87CEEB, #4682B4);
+        }
+
+        .atovin {
+            background: linear-gradient(135deg, #FF6B6B, #FF4757);
+        }
+
+        .axetil {
+            background: linear-gradient(135deg, #FF9F43, #FF7675);
+        }
+
+        @media (max-width: 768px) {
+            .hero-section {
+                flex-direction: column;
+                text-align: center;
+            }
+            
+            .nav-links {
+                gap: 1rem;
+                font-size: 0.9rem;
+            }
+            
+            .navbar {
+                padding: 1rem;
+            }
+            
+            .section-title {
+                font-size: 1.5rem;
+            }
+            
+            .hero-text {
+                font-size: 1rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Animated gradient background -->
+    <div class="gradient-background"></div>
+
+    <!-- Floating geometric shapes -->
+    <div class="floating-shapes">
+        <div class="shape"></div>
+        <div class="shape"></div>
+        <div class="shape"></div>
+        <div class="shape"></div>
+        <!-- Particle effects -->
+        <div class="particle" style="left: 10%; animation-delay: 0s;"></div>
+        <div class="particle" style="left: 20%; animation-delay: -2s;"></div>
+        <div class="particle" style="left: 30%; animation-delay: -4s;"></div>
+        <div class="particle" style="left: 40%; animation-delay: -6s;"></div>
+        <div class="particle" style="left: 50%; animation-delay: -8s;"></div>
+        <div class="particle" style="left: 60%; animation-delay: -10s;"></div>
+        <div class="particle" style="left: 70%; animation-delay: -12s;"></div>
+        <div class="particle" style="left: 80%; animation-delay: -14s;"></div>
+        <div class="particle" style="left: 90%; animation-delay: -16s;"></div>
+    </div>
+
+    <!-- Enhanced SVG background -->
+    <div class="svg-background">
+        <svg width="100%" height="100%" viewBox="0 0 1000 600" preserveAspectRatio="xMidYMid slice">
+            <!-- Modern flowing lines -->
+            <path class="enhanced-line" d="M 0 300 Q 250 200, 500 300 T 1000 300" stroke-width="2" style="opacity: 0.3;"></path>
+            <path class="enhanced-line" d="M 0 200 Q 333 100, 666 200 T 1000 200" stroke-width="1.5" style="opacity: 0.25;"></path>
+            <path class="enhanced-line" d="M 0 400 Q 200 500, 400 400 T 800 400 Q 900 350, 1000 400" stroke-width="1.8" style="opacity: 0.35;"></path>
+            
+            <!-- Vertical flowing lines -->
+            <path class="enhanced-line" d="M 200 0 Q 250 150, 200 300 T 200 600" stroke-width="1.2" style="opacity: 0.2;"></path>
+            <path class="enhanced-line" d="M 800 0 Q 750 200, 800 400 T 800 600" stroke-width="1.5" style="opacity: 0.3;"></path>
+            
+            <!-- Curved connecting paths -->
+            <path class="enhanced-line" d="M 0 100 C 300 50, 700 150, 1000 100" stroke-width="1" style="opacity: 0.2;"></path>
+            <path class="enhanced-line" d="M 0 500 C 400 450, 600 550, 1000 500" stroke-width="1.3" style="opacity: 0.28;"></path>
+            
+            <!-- Modern arrow indicators -->
+            <path class="arrow" d="M 490 295 L 510 300 L 490 305 Z" style="opacity: 0.4;"></path>
+            <path class="arrow" d="M 190 295 L 210 300 L 190 305 Z" style="opacity: 0.3;"></path>
+            <path class="arrow" d="M 790 395 L 810 400 L 790 405 Z" style="opacity: 0.35;"></path>
+            
+            <!-- Geometric accent elements -->
+            <circle cx="500" cy="300" r="3" fill="rgba(135, 206, 235, 0.4)" style="animation: pulse 4s ease-in-out infinite;"></circle>
+            <circle cx="200" cy="200" r="2" fill="rgba(135, 206, 235, 0.3)" style="animation: pulse 6s ease-in-out infinite;"></circle>
+            <circle cx="800" cy="400" r="2.5" fill="rgba(135, 206, 235, 0.35)" style="animation: pulse 5s ease-in-out infinite;"></circle>
+        </svg>
+    </div>
+
+    <!-- Navbar -->
+    <nav class="navbar">
+        <div class="logo logo-glow">
+            Alco Pharma Ltd.
+        </div>
+        <ul class="nav-links">
+            <li><a href="#home">Home</a></li>
+            <li><a href="#products">Products</a></li>
+            <li><a href="#innovation">Innovation</a></li>
+            <li><a href="#wellness">#Wellness</a></li>
+            <li><a href="#about">About Us</a></li>
+            <li><a href="#contact">Contact</a></li>
+        </ul>
+        <div class="user-profile">
+            <div class="profile-img">AP</div>
+            <span>Internal Login</span>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <div class="main-content">
+        <div class="hero-section">
+            <div class="hero-image">
+                <img src="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNTAwIiBoZWlnaHQ9IjMwMCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KICA8ZGVmcz4KICAgIDxsaW5lYXJHcmFkaWVudCBpZD0iZ3JhZGllbnQiIHgxPSIwJSIgeTE9IjAlIiB4Mj0iMTAwJSIgeTI9IjEwMCUiPgogICAgICA8c3RvcCBvZmZzZXQ9IjAlIiBzdHlsZT0ic3RvcC1jb2xvcjojZjBmOGZmO3N0b3Atb3BhY2l0eToxIiAvPgogICAgICA8c3RvcCBvZmZzZXQ9IjEwMCUiIHN0eWxlPSJzdG9wLWNvbG9yOiNlMGYyZmY7c3RvcC1vcGFjaXR5OjEiIC8+CiAgICA8L2xpbmVhckdyYWRpZW50PgogIDwvZGVmcz4KICA8cmVjdCB3aWR0aD0iNTAwIiBoZWlnaHQ9IjMwMCIgZmlsbD0idXJsKCNncmFkaWVudCkiLz4KICA8IS0tIExhYiBmbGFza3MgLS0+CiAgPGVsbGlwc2UgY3g9IjE1MCIgY3k9IjIwMCIgcng9IjMwIiByeT0iNDAiIGZpbGw9Im5vbmUiIHN0cm9rZT0iIzMzMzMzMyIgc3Ryb2tlLXdpZHRoPSIyIi8+CiAgPHBhdGggZD0iTSAxMjAgMjAwIEwgMTIwIDE4MCBMIDE4MCAxODAgTCAxODAgMjAwIiBmaWxsPSJub25lIiBzdHJva2U9IiMzMzMzMzMiIHN0cm9rZS13aWR0aD0iMiIvPgogIDxyZWN0IHg9IjEzNSIgeT0iMTYwIiB3aWR0aD0iMzAiIGhlaWdodD0iMjAiIGZpbGw9Im5vbmUiIHN0cm9rZT0iIzMzMzMzMyIgc3Ryb2tlLXdpZHRoPSIyIi8+CiAgPHBhdGggZD0iTSAxNTAgMTYwIEwgMTUwIDE0NSIgc3Ryb2tlPSIjMzMzMzMzIiBzdHJva2Utd2lkdGg9IjIiLz4KICA8IS0tIEJsdWUgbGlxdWlkIC0tPgogIDxlbGxpcHNlIGN4PSIxNTAiIGN5PSIyMTAiIHJ4PSIyNSIgcnk9IjMwIiBmaWxsPSIjNDY4MmI0IiBvcGFjaXR5PSIwLjgiLz4KICA8IS0tIFNlY29uZCBmbGFzayAtLT4KICA8ZWxsaXBzZSBjeD0iMzUwIiBjeT0iMjAwIiByeD0iMzAiIHJ5PSI0MCIgZmlsbD0ibm9uZSIgc3Ryb2tlPSIjMzMzMzMzIiBzdHJva2Utd2lkdGg9IjIiLz4KICA8cGF0aCBkPSJNIDMyMCAyMDAgTCAzMjAgMTgwIEwgMzgwIDE4MCBMIDM4MCAyMDAiIGZpbGw9Im5vbmUiIHN0cm9rZT0iIzMzMzMzMyIgc3Ryb2tlLXdpZHRoPSIyIi8+CiAgPHJlY3QgeD0iMzM1IiB5PSIxNjAiIHdpZHRoPSIzMCIgaGVpZ2h0PSIyMCIgZmlsbD0ibm9uZSIgc3Ryb2tlPSIjMzMzMzMzIiBzdHJva2Utd2lkdGg9IjIiLz4KICA8cGF0aCBkPSJNIDM1MCAxNjAgTCAzNTAgMTQ1IiBzdHJva2U9IiMzMzMzMzMiIHN0cm9rZS13aWR0aD0iMiIvPgogIDwhLS0gUHVycGxlIGxpcXVpZCAtLT4KICA8ZWxsaXBzZSBjeD0iMzUwIiBjeT0iMjEwIiByeD0iMjUiIHJ5PSIzMCIgZmlsbD0iIzk5MzNjYyIgb3BhY2l0eT0iMC44Ii8+CiAgPCEtLSBCZWFrZXJzIC0tPgogIDxyZWN0IHg9IjIzMCIgeT0iMTgwIiB3aWR0aD0iNDAiIGhlaWdodD0iNjAiIGZpbGw9Im5vbmUiIHN0cm9rZT0iIzMzMzMzMyIgc3Ryb2tlLXdpZHRoPSIyIi8+CiAgPHBhdGggZD0iTSAyMzAgMTkwIEwgMjcwIDE5MCBNIDIzMCAyMDAgTCAyNzAgMjAwIE0gMjMwIDIxMCBMIDI3MCAyMTAgTSAyMzAgMjIwIEwgMjcwIDIyMCBNIDIzMCAyMzAgTCAyNzAgMjMwIiBzdHJva2U9IiMzMzMzMzMiIHN0cm9rZS13aWR0aD0iMSIvPgogIDwhLS0gVGVzdCB0dWJlcyAtLT4KICA8cmVjdCB4PSI4MCIgeT0iMTIwIiB3aWR0aD0iMTIiIGhlaWdodD0iODAiIGZpbGw9Im5vbmUiIHN0cm9rZT0iIzMzMzMzMyIgc3Ryb2tlLXdpZHRoPSIyIiByeD0iNiIvPgogIDxyZWN0IHg9IjEwMCIgeT0iMTMwIiB3aWR0aD0iMTIiIGhlaWdodD0iNzAiIGZpbGw9Im5vbmUiIHN0cm9rZT0iIzMzMzMzMyIgc3Ryb2tlLXdpZHRoPSIyIiByeD0iNiIvPgogIDxyZWN0IHg9IjQwMCIgeT0iMTMwIiB3aWR0aD0iMTIiIGhlaWdodD0iNzAiIGZpbGw9Im5vbmUiIHN0cm9rZT0iIzMzMzMzMyIgc3Ryb2tlLXdpZHRoPSIyIiByeD0iNiIvPgogIDxyZWN0IHg9IjQyMCIgeT0iMTI1IiB3aWR0aD0iMTIiIGhlaWdodD0iNzUiIGZpbGw9Im5vbmUiIHN0cm9rZT0iIzMzMzMzMyIgc3Ryb2tlLXdpZHRoPSIyIiByeD0iNiIvPgogIDwhLS0gTGlxdWlkIGluIHRlc3QgdHViZXMgLS0+CiAgPHJlY3QgeD0iODIiIHk9IjE2MCIgd2lkdGg9IjgiIGhlaWdodD0iMzgiIGZpbGw9IiM5OTMzY2MiIG9wYWNpdHk9IjAuOCIgcng9IjQiLz4KICA8cmVjdCB4PSIxMDIiIHk9IjE1MCIgd2lkdGg9IjgiIGhlaWdodD0iNDgiIGZpbGw9IiM0NjgyYjQiIG9wYWNpdHk9IjAuOCIgcng9IjQiLz4KICA8cmVjdCB4PSI0MDIiIHk9IjE2MCIgd2lkdGg9IjgiIGhlaWdodD0iMzgiIGZpbGw9IiNmZjY5YjQiIG9wYWNpdHk9IjAuOCIgcng9IjQiLz4KICA8cmVjdCB4PSI0MjIiIHk9IjE1NSIgd2lkdGg9IjgiIGhlaWdodD0iNDMiIGZpbGw9IiMyOGE3NDUiIG9wYWNpdHk9IjAuOCIgcng9IjQiLz4KPC9zdmc+" alt="Laboratory Equipment">
+            </div>
+            <div class="hero-content">
+                <h1 class="section-title">WHO WE ARE</h1>
+                <p class="hero-text">
+                    Alco Pharma Ltd. started its marketing operations as importer and distributor for the products of MERCK SHARP & DHOME (MSD) USA in the year 1976 and continued up to 1985. Later it entered into joint venture with Alco and set up its manufacturing facility at Mirpur, Dhaka in 1986. In 1987 MSD decided to stop their operation in Bangladesh due to change in Drug Policy and sold their assets and interests to Alco Pharma.
+                </p>
+                <p class="hero-text">
+                    In the year 1990 Alco Pharma Ltd. received the Manufacturing License to start production of Biological & Non-Biological preparations in its own factory with strict adherence to cGMP as required by WHO. Now Alco Pharma is researching, developing, manufacturing and marketing a comprehensive range of formulations of antihypertensive, lipid lowering, anti-diabetic, anti-asthmatic, anti-histamine and antibacterial to host of other disease curing and life-enhancing products.
+                </p>
+            </div>
+        </div>
+
+        <!-- Products Section -->
+        <div class="products-section">
+            <div class="products-grid">
+                <div class="product-card">
+                    <div class="product-logo amdin-plus">
+                        <span style="color: white; font-size: 0.9rem;">Amdin Plus</span>
+                    </div>
+                    <div class="product-name">Amdin Plus</div>
+                    <div class="product-description">Amlodipine 5 mg + Indapamide 1.25mg</div>
+                </div>
+                
+                <div class="product-card">
+                    <div class="product-logo atovin">
+                        <span style="color: white; font-size: 1.1rem;">Atovin</span>
+                    </div>
+                    <div class="product-name">Atovin</div>
+                    <div class="product-description">Atorvastatin</div>
+                </div>
+                
+                <div class="product-card">
+                    <div class="product-logo axetil">
+                        <span style="color: white; font-size: 1.1rem;">Axetil</span>
+                    </div>
+                    <div class="product-name">Axetil</div>
+                    <div class="product-description">Cefuroxime Axetil</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Page Number -->
+        <div class="page-number">02</div>
+    </div>
+
+    <script>
+        // Navbar shrink on scroll
+        const navbar = document.querySelector('.navbar');
+        window.addEventListener('scroll', () => {
+            if (window.scrollY > 0) {
+                navbar.classList.add('shrink');
+            } else {
+                navbar.classList.remove('shrink');
+            }
+        });
+
+        // Smooth scrolling for navigation links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({
+                        behavior: 'smooth'
+                    });
+                }
+            });
+        });
+    </script>
+</body>
+</html>

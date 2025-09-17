@@ -1,0 +1,983 @@
+
+{% extends "base.html" %}
+{% block content %}
+
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>All Products of Alco Pharma</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #2c3e50 0%, #34495e 100%);
+            color: white;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #2c3e50 0%, #34495e 100%);
+            color: white;
+            padding: 10px 0; /* Reduced height by 50% */
+            text-align: center;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+
+        .header h1 {
+            font-size: 1.3rem;
+            margin-bottom: 4px;
+            font-weight: 300;
+        }
+
+        .header p {
+            font-size: 0.8rem;
+            opacity: 0.9;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 30px 20px;
+        }
+
+        .filter-section {
+            background: linear-gradient(135deg, #232a34 0%, #2c3e50 100%);
+            padding: 15px 20px;
+            border-radius: 18px;
+            box-shadow: 0 0 40px 0 #3498db33, 0 0 0 2px #22313a;
+            margin-bottom: 30px;
+            text-align: left;
+        }
+
+        .filter-dropdown {
+            position: relative;
+            display: inline-block;
+        }
+
+        .filter-btn {
+            padding: 8px 18px;
+            background: #263142;
+            border: 2px solid #34495e;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            transition: all 0.3s ease;
+            color: #e0e6ed !important;
+        }
+        .filter-btn:hover, .filter-btn.active {
+            background: #2a5298;
+            color: #fff !important;
+            border-color: #3498db;
+        }
+
+        .filter-btn i {
+            font-size: 0.8em;
+            transition: transform 0.3s ease;
+            color: #2a5298 !important; /* More visible color */
+        }
+
+        .filter-btn.active i {
+            transform: rotate(180deg);
+        }
+
+        .filter-popup {
+            position: absolute; /* Change from relative to absolute */
+            background: #232a34;
+            border-radius: 8px;
+            box-shadow: 0 8px 32px 0 #3498db33;
+            min-width: 250px;
+            max-height: 300px; /* Set a fixed max-height */
+            overflow-y: scroll;   /* Always show scrollbar */
+            z-index: 1000;
+            display: none;
+            margin-top: 8px;
+            padding: 10px 0;
+            /* Firefox scrollbar styling */
+            scrollbar-width: thin;
+            scrollbar-color: #2a9d8f #1a2230;
+        }
+
+        /* Custom Scrollbar for WebKit Browsers (Chrome, Safari) */
+        .filter-popup::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        .filter-popup::-webkit-scrollbar-track {
+            background: #1a2230; /* Darker background for the track */
+            border-radius: 10px;
+        }
+
+        .filter-popup::-webkit-scrollbar-thumb {
+            background-color: #2a9d8f; /* Scrollbar handle color */
+            border-radius: 10px;
+            border: 2px solid #1a2230; /* Padding around thumb */
+        }
+
+        .filter-popup::-webkit-scrollbar-thumb:hover {
+            background-color: #21867d; /* Hover color for the handle */
+        }
+
+        .filter-popup.show {
+            display: block;
+            animation: fadeIn 0.3s ease;
+        }
+
+        .filter-popup-header {
+            padding: 10px 15px;
+            border-bottom: 1px solid #34495e;
+            background: #232a34;
+            position: sticky;
+            top: 0;
+            z-index: 1;
+        }
+
+        .filter-search {
+            width: 100%;
+            padding: 8px 12px;
+            border: 1px solid #34495e;
+            border-radius: 4px;
+            margin-bottom: 8px;
+            background: #1a2230;
+            color: #e0e6ed;
+        }
+
+        .filter-list {
+            list-style: none;
+            margin: 0;
+            padding: 0;
+        }
+
+        .filter-item {
+            padding: 8px 15px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            color: #e0e6ed;
+        }
+
+        .filter-item:hover {
+            background: #2a5298;
+            color: #ffe082;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(-10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .filter-header {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start; /* Left align */
+            justify-content: flex-start;
+            margin-bottom: 15px;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        .filter-title {
+            font-size: 1.8rem;
+            color: #2a5298;
+            font-weight: 600;
+            margin: 0 0 10px 0;
+        }
+
+        .sort-toggle {
+            display: flex;
+            gap: 10px;
+            justify-content: center; /* Center the dropdowns */
+            align-items: center;
+            width: 100%;
+        }
+
+        .sort-btn {
+            padding: 8px 16px;
+            border-radius: 20px;
+            background: #f0f0f0;
+            color: #555;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            font-weight: 500;
+        }
+
+        .sort-btn:hover {
+            background: #2a5298;
+            color: white;
+        }
+
+        .sort-btn.active {
+            background: #2a5298;
+            color: white;
+        }
+
+        .search-container {
+            position: relative;
+            max-width: 90%;
+            margin: 0 auto 25px auto;
+        }
+
+        .search-box {
+            width: 100%;
+            padding: 15px 50px 15px 20px;
+            border: 2px solid #2a9d8f;
+            border-radius: 25px;
+            font-size: 1.1rem;
+            line-height: 1.5; /* Ensure text is vertically centered */
+            transition: all 0.3s ease;
+            background: rgba(38, 70, 83, 0.7);
+            color: #ffffff;
+        }
+        
+        .search-box::placeholder {
+            color: #e2e8f0;
+            opacity: 0.7;
+        }
+
+        .search-box:focus {
+            outline: none;
+            border-color: #2a9d8f;
+            background: #1a2230;
+            box-shadow: 0 0 15px #2a9d8f88;
+        }
+
+        .search-btn {
+            position: absolute;
+            right: 5px;
+            top: 50%;
+            transform: translateY(-50%);
+            background: #2a9d8f;
+            color: #fff;
+            border: none;
+            padding: 10px 15px;
+            border-radius: 20px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 0 8px #2a9d8f55;
+        }
+
+        .search-btn:hover {
+            background: #21867d;
+            transform: translateY(-50%) scale(1.05);
+        }
+
+        .alphabet-filter {
+            display: flex;
+            flex-wrap: nowrap;
+            gap: 4px;
+            justify-content: center;
+            align-items: center;
+            width: 100%;
+            margin: 0 auto 15px auto; /* Added more bottom margin */
+            overflow-x: auto;
+            background: none;
+            padding-bottom: 5px; /* Add padding to avoid scrollbar overlap */
+        }
+
+        .alphabet-btn {
+            background: #263142;
+            border: 2px solid #34495e;
+            padding: 6px 8px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 0.85rem;
+            transition: all 0.3s ease;
+            color: #e0e6ed;
+            min-width: 28px;
+            text-align: center;
+            text-decoration: none;
+            box-shadow: 0 0 8px #22313a55;
+        }
+
+        .alphabet-btn:hover {
+            background: #2a5298;
+            color: #fff;
+            transform: translateY(-2px);
+            box-shadow: 0 0 12px #3498db55;
+        }
+
+        .alphabet-btn.active {
+            background: #3498db;
+            color: #fff;
+            box-shadow: 0 0 16px #3498db88;
+        }
+
+        .products-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 25px;
+            margin-top: 30px;
+        }
+
+        .product-card {
+            background: rgba(44,62,80,0.98);
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 8px 30px 0 #3498db88, 0 8px 30px 0 #2a529888; /* Increased glow by 50% */
+            transition: all 0.3s ease;
+            position: relative;
+            cursor: pointer;
+            will-change: transform, box-shadow; /* Performance optimization */
+            transform: translateZ(0); /* Promote to own layer for GPU acceleration */
+        }
+
+        .product-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 15px 35px rgba(0,0,0,0.2);
+        }
+
+        .product-image {
+            width: 100%;
+            height: 260px;
+            background: linear-gradient(135deg, #2c3e50 0%, #34495e 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .product-image img {
+            max-width: 80%;
+            max-height: 80%;
+            object-fit: contain;
+            transition: all 0.3s ease;
+        }
+
+        .product-card:hover .product-image img {
+            transform: scale(1.1);
+        }
+
+        .product-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(45deg, rgba(0,0,0,0.7), rgba(0,0,0,0.3));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            opacity: 0;
+            transition: all 0.3s ease;
+        }
+
+        .product-card:hover .product-overlay {
+            opacity: 1;
+        }
+
+        .product-name {
+            color: white;
+            font-size: 1.3rem;
+            font-weight: 600;
+            text-align: center;
+            padding: 0 15px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
+        }
+
+        .product-info {
+            padding: 18px 10px 14px 10px;
+            text-align: center;
+            background: rgba(44,62,80,0.95);
+            border-radius: 0 0 15px 15px;
+        }
+
+        .product-title {
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: #2a5298;
+            margin-bottom: 8px;
+        }
+
+        .product-category {
+            color: #666;
+            font-size: 0.9rem;
+            margin-bottom: 15px;
+        }
+
+        .product-description {
+            color: #777;
+            font-size: 0.85rem;
+            line-height: 1.4;
+        }
+
+        .therapeutic-class {
+            color: #2a5298;
+            font-size: 0.9rem;
+            margin: 4px 0;
+            font-weight: 500;
+            background: #f0f5ff;
+            padding: 4px 8px;
+            border-radius: 4px;
+            display: inline-block;
+        }
+
+        .no-products {
+            text-align: center;
+            padding: 60px 20px;
+            color: #666;
+            font-size: 1.2rem;
+        }
+
+        .no-products i {
+            font-size: 4rem;
+            color: #ddd;
+            margin-bottom: 20px;
+            display: block;
+        }
+
+        .product-card a {
+            text-decoration: none;
+            color: inherit;
+        }
+
+        .header a {
+            text-decoration: none;
+        }
+
+        @media (max-width: 768px) {
+            .filter-header {
+                flex-direction: column;
+                align-items: center;
+                gap: 15px;
+            }
+            .header h1 {
+                font-size: 2rem;
+            }
+            .alphabet-filter {
+                gap: 5px;
+            }
+            .alphabet-btn {
+                padding: 10px 12px;
+                font-size: 0.9rem;
+                min-width: 40px;
+            }
+            .products-grid {
+                grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+                gap: 20px;
+            }
+        }
+
+        .pulse-animation {
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); }
+        }
+
+        .product-card,
+        .product-info,
+        .product-card .product-name,
+        .product-card .product-info > div {
+            text-align: center !important;
+        }
+        .product-info > div {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+    </style>
+</head>
+<body>
+    <!-- Animated green gradient background layer -->
+    <div class="alco-animated-bg"></div>
+    <!-- SVG lines background layer -->
+    <div class="alco-svg-bg">
+        <svg width="100%" height="100%" viewBox="0 0 1000 600" preserveAspectRatio="xMidYMid slice">
+            <path class="alco-bg-line" d="M 0 300 Q 250 200, 500 300 T 1000 300" stroke-width="2" style="opacity: 0.3;"></path>
+            <path class="alco-bg-line" d="M 0 200 Q 333 100, 666 200 T 1000 200" stroke-width="1.5" style="opacity: 0.25;"></path>
+            <path class="alco-bg-line" d="M 0 400 Q 200 500, 400 400 T 800 400 Q 900 350, 1000 400" stroke-width="1.8" style="opacity: 0.35;"></path>
+            <path class="alco-bg-line" d="M 200 0 Q 250 150, 200 300 T 200 600" stroke-width="1.2" style="opacity: 0.2;"></path>
+            <path class="alco-bg-line" d="M 800 0 Q 750 200, 800 400 T 800 600" stroke-width="1.5" style="opacity: 0.3;"></path>
+            <path class="alco-bg-line" d="M 0 100 C 300 50, 700 150, 1000 100" stroke-width="1" style="opacity: 0.2;"></path>
+            <path class="alco-bg-line" d="M 0 500 C 400 450, 600 550, 1000 500" stroke-width="1.3" style="opacity: 0.28;"></path>
+            <path class="alco-bg-arrow" d="M 490 295 L 510 300 L 490 305 Z" style="opacity: 0.4;"></path>
+            <path class="alco-bg-arrow" d="M 190 295 L 210 300 L 190 305 Z" style="opacity: 0.3;"></path>
+            <path class="alco-bg-arrow" d="M 790 395 L 810 400 L 790 405 Z" style="opacity: 0.35;"></path>
+            <circle cx="500" cy="300" r="3" fill="rgba(42,157,143,0.4)" style="animation: alco-pulse 4s ease-in-out infinite;"></circle>
+            <circle cx="200" cy="200" r="2" fill="rgba(42,157,143,0.3)" style="animation: alco-pulse 6s ease-in-out infinite;"></circle>
+            <circle cx="800" cy="400" r="2.5" fill="rgba(42,157,143,0.35)" style="animation: alco-pulse 5s ease-in-out infinite;"></circle>
+        </svg>
+    </div>
+    <style>
+    .alco-animated-bg {
+        position: fixed;
+        top: 0; left: 0;
+        width: 100vw; height: 100vh;
+        z-index: 0;
+        pointer-events: none;
+        background: linear-gradient(135deg, #2a9d8f 0%, #2a9d8f 25%, #264653 50%, #264653 75%, #2a9d8f 100%);
+        background-size: 400% 400%;
+        animation: alco-gradientShift 12s ease-in-out infinite;
+    }
+    @keyframes alco-gradientShift {
+        0% { background-position: 0% 50%; }
+        25% { background-position: 100% 50%; }
+        50% { background-position: 100% 50%; }
+        75% { background-position: 0% 50%; }
+        100% { background-position: 0% 50%; }
+    }
+    .alco-svg-bg {
+        position: fixed;
+        top: 0; left: 0;
+        width: 100vw; height: 100vh;
+        z-index: 1;
+        pointer-events: none;
+    }
+    .alco-bg-line {
+        stroke: rgba(42,157,143,0.3);
+        stroke-width: 1.5;
+        fill: none;
+        animation: alco-flow 15s linear infinite;
+    }
+    .alco-bg-arrow {
+        fill: rgba(42,157,143,0.3);
+        stroke: none;
+        animation: alco-arrowPulse 6s ease-in-out infinite;
+    }
+    @keyframes alco-flow {
+        0% { stroke-dasharray: 0 100; stroke-dashoffset: 0; opacity: 0.2; }
+        50% { stroke-dasharray: 50 50; stroke-dashoffset: -25; opacity: 0.4; }
+        100% { stroke-dasharray: 100 0; stroke-dashoffset: -100; opacity: 0.2; }
+    }
+    @keyframes alco-arrowPulse {
+        0%, 100% { opacity: 0.3; transform: scale(1); }
+        50% { opacity: 0.6; transform: scale(1.1); }
+    }
+    @keyframes alco-pulse {
+        0%, 100% { opacity: 0.2; }
+        50% { opacity: 0.4; }
+    }
+    body > *:not(.alco-animated-bg):not(.alco-svg-bg) {
+        position: relative;
+        z-index: 2;
+    }
+    /* Glassy teal/green background for all main boxes */
+    .filter-section {
+        background: linear-gradient(135deg, #2a9d8f 0%, #21867d 50%, #2a9d8f 100%);
+        border-radius: 20px;
+        box-shadow: 0 10px 30px rgba(42,157,143,0.18), 0 0 40px rgba(42,157,143,0.13);
+        backdrop-filter: blur(16px) saturate(1.2);
+        -webkit-backdrop-filter: blur(16px) saturate(1.2);
+        border: 1.5px solid rgba(42,157,143,0.3);
+        color: #fafdff;
+    }
+    .products-grid {
+        background: none !important;
+        box-shadow: none !important;
+        padding: 0 !important;
+        margin-top: 32px;
+        margin-bottom: 32px;
+    }
+    .product-card {
+        background: linear-gradient(135deg, #2a9d8f 0%, #21867d 50%, #2a9d8f 100%) !important;
+        border-radius: 18px !important;
+        box-shadow: 0 15px 35px rgba(42,157,143,0.18), 0 0 40px rgba(42,157,143,0.13) !important;
+        backdrop-filter: blur(12px) saturate(1.1) !important;
+        -webkit-backdrop-filter: blur(12px) saturate(1.1) !important;
+        border: 1.5px solid rgba(42,157,143,0.3) !important;
+        color: #fff !important;
+        padding: 18px 10px 14px 10px !important;
+        margin-bottom: 18px;
+        transition: box-shadow 0.3s, transform 0.3s;
+    }
+    .product-card:hover {
+        box-shadow: 0 25px 60px rgba(42,157,143,0.28), 0 0 80px rgba(42,157,143,0.18) !important;
+        transform: translateY(-8px) scale(1.03);
+    }
+    .product-image {
+        background: linear-gradient(135deg, #2a9d8f 0%, #21867d 100%) !important;
+        border-radius: 14px 14px 0 0 !important;
+        box-shadow: none !important;
+    }
+    .product-info {
+        background: transparent !important;
+        border-radius: 0 0 14px 14px !important;
+        box-shadow: none !important;
+        color: #fafdff !important;
+    }
+    .product-name, .product-title, .therapeutic-class {
+        color: #fff !important;
+        text-shadow: 0 2px 8px rgba(42,157,143,0.3), 0 1px 4px rgba(0,0,0,0.7);
+    }
+    .product-category, .product-description {
+        color: #e2e8f0 !important;
+    }
+    .filter-popup, .filter-popup-header {
+        background: linear-gradient(135deg, #2a9d8f 0%, #21867d 100%);
+        border-radius: 10px;
+        box-shadow: 0 4px 16px rgba(42,157,143,0.13);
+        color: #fff;
+    }
+    .search-box {
+        background: rgba(42,157,143,0.18);
+        color: #fff;
+        border: 1.5px solid rgba(42,157,143,0.3);
+    }
+    .search-box:focus {
+        background: rgba(42,157,143,0.28);
+        border-color: #2a9d8f;
+        color: #fff;
+    }
+    .alphabet-btn {
+        background: rgba(42,157,143,0.22);
+        border: 1.5px solid rgba(42,157,143,0.3);
+        color: #fff;
+    }
+    .alphabet-btn.active, .alphabet-btn:hover {
+        background: #21867d;
+        color: #fff;
+    }
+    .filter-btn, .sort-btn {
+        background: rgba(42,157,143,0.22);
+        border: 1.5px solid rgba(42,157,143,0.3);
+        color: #fff;
+    }
+    .filter-btn.active, .filter-btn:hover, .sort-btn.active, .sort-btn:hover {
+        background: #21867d;
+        color: #fff;
+    }
+    .no-products {
+        background: linear-gradient(135deg, #2a9d8f 0%, #21867d 100%);
+        border-radius: 18px;
+        color: #fff;
+        box-shadow: 0 4px 16px rgba(42,157,143,0.13);
+    }
+    .header {
+        position: relative;
+        background: linear-gradient(135deg, #2a9d8f 0%, #21867d 100%);
+        color: #fff;
+        border-radius: 18px;
+        box-shadow: 0 0 60px 20px rgba(42,157,143,0.35), 0 2px 10px rgba(0,0,0,0.08);
+        z-index: 3;
+        margin-bottom: 18px;
+    }
+    .header > div {
+        position: relative;
+        z-index: 2;
+    }
+    .header::before {
+        content: '';
+        position: absolute;
+        top: 10px; left: 10px; right: 10px; bottom: 10px;
+        border-radius: 18px;
+        box-shadow: 0 0 80px 30px rgba(42,157,143,0.25), 0 0 0 8px rgba(42,157,143,0.10);
+        z-index: 1;
+        pointer-events: none;
+    }
+    <style>
+    /* Section container styles */
+    .section-container {
+        background: linear-gradient(135deg, #2a9d8f 0%, #21867d 50%, #2a9d8f 100%);
+        border-radius: 20px;
+        box-shadow: 0 10px 30px rgba(42,157,143,0.18), 0 0 40px rgba(42,157,143,0.13);
+        backdrop-filter: blur(16px) saturate(1.2);
+        -webkit-backdrop-filter: blur(16px) saturate(1.2);
+        border: 1.5px solid rgba(42,157,143,0.3);
+        color: #fafdff;
+        margin-bottom: 30px; /* Space between sections */
+        padding: 20px;
+    }
+
+    .header-section {
+        /* Inherits from .section-container */
+        text-align: center;
+        padding: 10px 20px;
+    }
+
+    .filter-controls-section {
+        /* Inherits from .section-container */
+    }
+
+    .products-section {
+        /* Inherits from .section-container */
+        background: transparent; /* Product grid has its own card backgrounds */
+        box-shadow: none;
+        border: none;
+        padding: 0;
+    }
+    </style>
+    <!-- End animated background -->
+    <div class="container">
+        <div class="section-container header-section">
+            <div style="display: flex; flex-direction: column; align-items: center; max-width: 1200px; margin: 0 auto;">
+                <h1 style="margin: 0;">All Products of Alco Pharma</h1>
+                <p style="margin: 4px 0 0 0;">Comprehensive pharmaceutical solutions for different diseases</p>
+            </div>
+        </div>
+
+        <div class="section-container filter-controls-section">
+            <div class="filter-header">
+                <!-- <h2 class="filter-title">Browse Products</h2> -->
+                <div class="sort-toggle">
+                    <div class="filter-dropdown">
+                        <button class="filter-btn" onclick="toggleFilter('brand')">Brand Names <i>▼</i></button>
+                        <div class="filter-popup" id="brandFilter">
+                            <div class="filter-popup-header">
+                                <input type="text" class="filter-search" placeholder="Search brands..." onkeyup="filterList('brand')">
+                            </div>
+                            <ul class="filter-list" id="brandList">
+                                {% for name in brand_names %}
+                                    <li class="filter-item" onclick="selectFilter('brand', '{{ name }}')">{{ name }}</li>
+                                {% endfor %}
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="filter-dropdown">
+                        <button class="filter-btn" onclick="toggleFilter('generic')">Generic Names <i>▼</i></button>
+                        <div class="filter-popup" id="genericFilter">
+                            <div class="filter-popup-header">
+                                <input type="text" class="filter-search" placeholder="Search generic names..." onkeyup="filterList('generic')">
+                            </div>
+                            <ul class="filter-list" id="genericList">
+                                {% for name in generic_names %}
+                                    <li class="filter-item" onclick="selectFilter('generic', '{{ name }}')">{{ name }}</li>
+                                {% endfor %}
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="filter-dropdown">
+                        <button class="filter-btn" onclick="toggleFilter('therapeutic')">Therapeutic Class <i>▼</i></button>
+                        <div class="filter-popup" id="therapeuticFilter">
+                            <div class="filter-popup-header">
+                                <input type="text" class="filter-search" placeholder="Search therapeutic classes..." onkeyup="filterList('therapeutic')">
+                            </div>
+                            <ul class="filter-list" id="therapeuticList">
+                                {% for name in therapeutic_classes %}
+                                    <li class="filter-item" onclick="selectFilter('therapeutic', '{{ name }}')">{{ name }}</li>
+                                {% endfor %}
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="search-container">
+                <form method="get" id="searchForm" style="display: flex; align-items: center;">
+                    <input type="text" class="search-box" name="search" id="searchInput" placeholder="Search products..." value="{{ request.GET.search }}">
+                    <input type="hidden" name="sort_by" value="{{ request.GET.sort_by|default:'brand' }}">
+                    <button class="search-btn" type="submit">🔍</button>
+                </form>
+            </div>
+
+            <div class="alphabet-filter">
+                <a href="javascript:void(0)" onclick="fetchProducts('{{ request.GET.search }}', 'ALL', null, '{{ request.GET.sort_by|default:'brand' }}', null)" class="alphabet-btn {% if not request.GET.letter or request.GET.letter == 'ALL' %}active{% endif %}">ALL</a>
+                {% for l in 'ABCDEFGHIJKLMNOPQRSTUVWXYZ' %}
+                    <a href="javascript:void(0)" onclick="fetchProducts('{{ request.GET.search }}', '{{ l }}', null, '{{ request.GET.sort_by|default:'brand' }}', null)" class="alphabet-btn {% if request.GET.letter == l %}active{% endif %}">{{ l }}</a>
+                {% endfor %}
+            </div>
+        </div>
+
+        <div class="section-container products-section">
+            <div class="products-grid" id="productsContainer">
+                {% for product in products %}
+                    <div class="product-card">
+                        <a href="{% url 'product_detail' product.pk %}">
+                            <div class="product-image" style="height: 260px; background: linear-gradient(135deg, #2c3e50 0%, #34495e 100%);">
+                                {% if product.image %}
+                                    <img src="{{ product.image.url }}" alt="{{ product.name }}" style="width: 97%; height: 97%; object-fit: cover; display: block; margin: auto; box-shadow: 0 0 30px 10px #3498db55;">
+                                {% else %}
+                                    <img src="{% static 'images/default-product.png' %}" alt="No image" style="width: 97%; height: 97%; object-fit: cover; display: block; margin: auto; box-shadow: 0 0 30px 10px #3498db55;">
+                                {% endif %}
+                            </div>
+                            <div class="product-info" style="background: rgba(44,62,80,0.95); border-radius: 0 0 15px 15px; padding: 18px 10px 14px 10px;">
+                                <div style="display: flex; flex-direction: column; align-items: center; gap: 6px;">
+                                    <span class="product-name" style="font-size: 1.3rem; font-weight: 700; color: #fff; text-shadow: 0 0 12px #3498db, 0 0 24px #2c3e50; letter-spacing: 1px; padding: 2px 12px; border-radius: 8px; background: rgba(52,152,219,0.18);">{{ product.name }}</span>
+                                    {% if product.generic_name %}
+                                    <span style="font-size: 1.05rem; color: #b0c4de; font-style: italic; background: rgba(44,62,80,0.7); padding: 1px 8px; border-radius: 6px; margin-top: -2px;">{{ product.generic_name }}</span>
+                                    {% endif %}
+                                    {% if product.therapeutic_class %}
+                                    <span style="font-size: 0.98rem; color: #ffe082; background: rgba(52,152,219,0.13); padding: 1px 8px; border-radius: 6px; margin-top: -2px;">{{ product.therapeutic_class.name }}</span>
+                                    {% endif %}
+                                    <span style="font-size: 0.95rem; color: #fff; background: rgba(52,152,219,0.10); padding: 1px 8px; border-radius: 6px; margin-top: 4px;">Pack Size: {{ product.pack_size }}</span>
+                                </div>
+                            </div>
+                        </a>
+                    </div>
+                {% empty %}
+                    <p>No products available.</p>
+                {% endfor %}
+            </div>
+        </div>
+
+        <!-- Pagination Controls -->
+        {% if page_obj.has_other_pages %}
+        <div style="display: flex; justify-content: center; margin: 40px 0 0 0;">
+            <nav aria-label="Page navigation">
+                <ul style="display: flex; list-style: none; gap: 8px; padding: 0;">
+                    {% if page_obj.has_previous %}
+                        <li><a href="?{% if request.GET.letter %}letter={{ request.GET.letter }}&{% endif %}{% if request.GET.search %}search={{ request.GET.search }}&{% endif %}page={{ page_obj.previous_page_number }}" style="padding: 8px 14px; border-radius: 6px; background: #e0e0e0; color: #2a5298; text-decoration: none;">&laquo; Prev</a></li>
+                    {% endif %}
+                    {% for num in paginator.page_range %}
+                        {% if page_obj.number == num %}
+                            <li><span style="padding: 8px 14px; border-radius: 6px; background: #2a5298; color: white; font-weight: bold;">{{ num }}</span></li>
+                        {% elif num > page_obj.number|add:'-5' and num < page_obj.number|add:'5' %}
+                            <li><a href="?{% if request.GET.letter %}letter={{ request.GET.letter }}&{% endif %}{% if request.GET.search %}search={{ request.GET.search }}&{% endif %}page={{ num }}" style="padding: 8px 14px; border-radius: 6px; background: #e0e0e0; color: #2a5298; text-decoration: none;">{{ num }}</a></li>
+                        {% endif %}
+                    {% endfor %}
+                    {% if page_obj.has_next %}
+                        <li><a href="?{% if request.GET.letter %}letter={{ request.GET.letter }}&{% endif %}{% if request.GET.search %}search={{ request.GET.search }}&{% endif %}page={{ page_obj.next_page_number }}" style="padding: 8px 14px; border-radius: 6px; background: #e0e0e0; color: #2a5298; text-decoration: none;">Next &raquo;</a></li>
+                    {% endif %}
+                </ul>
+            </nav>
+        </div>
+        {% endif %}
+    </div>
+
+</body>
+<script>
+// Live search functionality
+const searchInput = document.getElementById('searchInput');
+const productsContainer = document.getElementById('productsContainer');
+let searchTimeout = null;
+let activeFilter = null;
+
+function fetchProducts(query, letter, page, filterType, filterValue) {
+    let url = new URL(window.location.href);
+    // Preserve or set sort_by parameter
+    const currentSortBy = url.searchParams.get('sort_by') || 'brand';
+    url.searchParams.set('sort_by', filterType ? filterType : currentSortBy);
+    
+    if (query) url.searchParams.set('search', query);
+    else url.searchParams.delete('search');
+    if (letter) url.searchParams.set('letter', letter);
+    else url.searchParams.delete('letter');
+    if (page) url.searchParams.set('page', page);
+    else url.searchParams.delete('page');
+    if (filterValue) {
+        url.searchParams.set('filter_value', filterValue);
+    } else {
+        url.searchParams.delete('filter_value');
+    }
+    
+    fetch(url.pathname + url.search, {
+        headers: { 'X-Requested-With': 'XMLHttpRequest' }
+    })
+    .then(response => response.text())
+    .then(html => {
+        const parser = new DOMParser();
+        const doc = parser.parseFromString(html, 'text/html');
+        const newGrid = doc.getElementById('productsContainer');
+        const newPagination = doc.querySelector('nav[aria-label="Page navigation"]');
+        
+        if (newGrid) productsContainer.innerHTML = newGrid.innerHTML;
+        
+        const oldPagination = document.querySelector('nav[aria-label="Page navigation"]');
+        if (oldPagination && newPagination) {
+            oldPagination.parentNode.replaceChild(newPagination, oldPagination);
+        } else if (!oldPagination && newPagination) {
+            productsContainer.insertAdjacentElement('afterend', newPagination.parentNode);
+        } else if (oldPagination && !newPagination) {
+            oldPagination.parentNode.removeChild(oldPagination);
+        }
+        
+        handlePaginationLinks();
+    });
+}
+
+// Filter dropdown functionality
+function toggleFilter(type) {
+    const filterPopup = document.getElementById(`${type}Filter`);
+    const filterBtn = filterPopup.previousElementSibling;
+    
+    if (activeFilter && activeFilter !== filterPopup) {
+        activeFilter.classList.remove('show');
+        activeFilter.previousElementSibling.classList.remove('active');
+    }
+    
+    filterPopup.classList.toggle('show');
+    filterBtn.classList.toggle('active');
+    activeFilter = filterPopup.classList.contains('show') ? filterPopup : null;
+}
+
+// Close filter popup when clicking outside
+document.addEventListener('click', function(e) {
+    if (!e.target.closest('.filter-dropdown') && activeFilter) {
+        activeFilter.classList.remove('show');
+        activeFilter.previousElementSibling.classList.remove('active');
+        activeFilter = null;
+    }
+});
+
+// Filter list search functionality
+function filterList(type) {
+    const searchInput = document.querySelector(`#${type}Filter .filter-search`);
+    const items = document.querySelectorAll(`#${type}List .filter-item`);
+    const searchTerm = searchInput.value.toLowerCase();
+    
+    items.forEach(item => {
+        const text = item.textContent.toLowerCase();
+        item.style.display = text.includes(searchTerm) ? '' : 'none';
+    });
+}
+
+// Handle filter selection
+function selectFilter(type, value) {
+    const filterPopup = document.getElementById(`${type}Filter`);
+    const filterBtn = filterPopup.previousElementSibling;
+    
+    // Update button text
+    filterBtn.innerHTML = `${value} <i>▼</i>`;
+    
+    // Close popup
+    filterPopup.classList.remove('show');
+    filterBtn.classList.remove('active');
+    activeFilter = null;
+    
+    // Fetch filtered products
+    fetchProducts(searchInput.value, getCurrentLetter(), 1, type, value);
+}
+
+// Search input handler
+if (searchInput) {
+    searchInput.addEventListener('input', function() {
+        clearTimeout(searchTimeout);
+        searchTimeout = setTimeout(() => {
+            fetchProducts(searchInput.value, getCurrentLetter(), 1);
+        }, 300);
+    });
+}
+
+function getCurrentLetter() {
+    const urlParams = new URLSearchParams(window.location.search);
+    return urlParams.get('letter') || '';
+}
+
+// Handle alphabet filter clicks
+const alphabetLinks = document.querySelectorAll('.alphabet-filter a');
+alphabetLinks.forEach(link => {
+    link.addEventListener('click', function(e) {
+        e.preventDefault();
+        fetchProducts(searchInput.value, this.textContent === 'ALL' ? 'ALL' : this.textContent, 1);
+    });
+});
+
+// Handle pagination clicks
+function handlePaginationLinks() {
+    const paginationLinks = document.querySelectorAll('nav[aria-label="Page navigation"] a');
+    paginationLinks.forEach(link => {
+        link.addEventListener('click', function(e) {
+            e.preventDefault();
+            const pageMatch = this.href.match(/page=(\d+)/);
+            const page = pageMatch ? pageMatch[1] : 1;
+            fetchProducts(searchInput.value, getCurrentLetter(), page);
+        });
+    });
+}
+
+document.addEventListener('DOMContentLoaded', handlePaginationLinks);
+</script>
+{% endblock %}</html>

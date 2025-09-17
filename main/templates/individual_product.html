@@ -1,0 +1,1381 @@
+{% extends "base.html" %}
+{% block content %}
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ product.name }} Details</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700&family=Inter:wght@300;400;500;600&display=swap');
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        :root {
+            --teal-main: #2a9d8f;
+            --teal-dark: #21867d;
+            --glow-main: rgba(42,157,143,0.6);
+            --glow-outer: rgba(42,157,143,0.45);
+            --glow-extended: rgba(42,157,143,0.7);
+            --glow-inner: rgba(42,157,143,0.25);
+            --glass-bg: rgba(42,157,143,0.22);
+            --glass-bg-strong: rgba(42,157,143,0.38);
+            --glass-border: rgba(42,157,143,0.3);
+            --white-overlay: rgba(255,255,255,0.18);
+            --pulse-glow: 0 0 40px var(--glow-extended), 0 0 80px var(--glow-outer);
+        }
+        
+        body {
+            font-family: 'Inter', sans-serif;
+            background: radial-gradient(circle at 60% 20%, rgba(255,255,255,0.10) 0%, transparent 60%),
+                        linear-gradient(135deg, var(--teal-main) 0%, var(--teal-dark) 50%, var(--teal-main) 100%);
+            color: #fafdff;
+            min-height: 100vh;
+            position: relative;
+            /* Subtle light source */
+            box-shadow: 0 0 200px 40px var(--glow-outer) inset;
+        }
+        
+        /* SVG container for the abstract background */
+        .svg-background {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 1;
+            pointer-events: none;
+        }
+
+        /* Section-specific SVG backgrounds */
+        .section-bg {
+            position: absolute;
+            top: 0; 
+            left: 0; 
+            width: 100%; 
+            height: 100%;
+            z-index: 1;
+            pointer-events: none;
+            opacity: 0.6;
+        }
+
+        /* Styling for SVG paths/lines */
+        .svg-background line,
+        .svg-background path {
+            stroke: rgba(42, 157, 143, 0.4);
+            stroke-width: 1;
+            fill: none;
+            animation: drawLine 60s linear infinite;
+        }
+
+        .section-bg line,
+        .section-bg path {
+            stroke: rgba(42, 157, 143, 0.6);
+            stroke-width: 1;
+            fill: none;
+            animation: drawLine 60s linear infinite;
+        }
+
+        /* Specific styling for arrowheads */
+        .svg-background .arrow {
+            fill: rgba(42, 157, 143, 0.4);
+            stroke: none;
+        }
+
+        .section-bg .arrow {
+            fill: rgba(42, 157, 143, 0.8);
+            stroke: none;
+        }
+
+        /* Animation for drawing lines */
+        @keyframes drawLine {
+            from {
+                stroke-dasharray: 0 1000;
+                stroke-dashoffset: 0;
+            }
+            to {
+                stroke-dasharray: 1000 1000;
+                stroke-dashoffset: -2000;
+            }
+        }
+        
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 40px 20px;
+            position: relative;
+            z-index: 10;
+        }
+        
+        .sliding-banner {
+            background: linear-gradient(135deg, #2a9d8f 0%, #21867d 50%, #2a9d8f 100%);
+            border: 1px solid #2a9d8f;
+            backdrop-filter: blur(20px);
+            color: #f1f5f9;
+            padding: 20px;
+            margin: 40px 0;
+            border-radius: 20px;
+            overflow: hidden;
+            position: relative;
+            box-shadow: 
+                0 0 40px rgba(42,157,143,0.15),
+                inset 0 1px 0 rgba(255,255,255,0.1),
+                0 0 50px rgba(42,157,143,0.4);
+        }
+        
+        .sliding-text {
+            animation: slide 20s linear infinite;
+            white-space: nowrap;
+            font-weight: 500;
+            font-size: 1.1rem;
+            letter-spacing: 0.5px;
+            position: relative;
+            z-index: 10;
+        }
+        
+        @keyframes slide {
+            0% { transform: translateX(100%); }
+            100% { transform: translateX(-100%); }
+        }
+        
+        .product-main {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 60px;
+            margin-bottom: 80px;
+            background: linear-gradient(135deg, #2a9d8f 0%, #21867d 50%, #2a9d8f 100%);
+            backdrop-filter: blur(20px);
+            padding: 50px;
+            border-radius: 25px;
+            border: 1px solid #2a9d8f;
+            box-shadow: 
+                0 25px 50px rgba(42,157,143,0.3),
+                0 0 60px rgba(42,157,143,0.2),
+                inset 0 1px 0 rgba(255,255,255,0.1),
+                0 0 80px rgba(42,157,143,0.4);
+            position: relative;
+        }
+        
+        .product-images {
+            position: relative;
+            z-index: 10;
+        }
+        
+        .main-image {
+            width: 100%;
+            height: 450px;
+            border-radius: 20px;
+            object-fit: cover;
+            border: 1px solid #2a9d8f;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            background: linear-gradient(135deg, #2a9d8f 0%, #21867d 100%);
+            box-shadow: 
+                0 20px 40px rgba(42,157,143,0.3),
+                0 0 40px rgba(42,157,143,0.1);
+        }
+        
+        .main-image:hover {
+            transform: scale(1.02);
+            box-shadow: 
+                0 25px 50px rgba(42,157,143,0.4),
+                0 0 60px rgba(42,157,143,0.2);
+        }
+        
+        .image-thumbnails {
+            display: flex;
+            gap: 15px;
+            margin-top: 20px;
+            overflow-x: auto;
+            padding: 10px 0;
+        }
+        
+        .thumbnail {
+            width: 90px;
+            height: 90px;
+            border-radius: 15px;
+            object-fit: cover;
+            cursor: pointer;
+            border: 2px solid #2a9d8f;
+            background: linear-gradient(135deg, #2a9d8f 0%, #21867d 100%);
+            transition: all 0.3s ease;
+            flex-shrink: 0;
+        }
+        
+        .thumbnail:hover,
+        .thumbnail.active {
+            border-color: #2a9d8f;
+            box-shadow: 
+                0 0 20px rgba(42,157,143,0.4),
+                0 8px 16px rgba(42,157,143,0.2);
+            transform: translateY(-3px);
+        }
+        
+        .product-info {
+            display: flex;
+            flex-direction: column;
+            gap: 30px;
+            position: relative;
+            z-index: 10;
+        }
+        
+        .product-title {
+            font-family: 'Playfair Display', serif;
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: #d2f0eb;
+            margin-bottom: 15px;
+            line-height: 1.2;
+            text-shadow: 0 2px 4px rgba(42,157,143,0.3);
+        }
+        
+        .product-subtitle {
+            font-size: 1.2rem;
+            color: #cbd5e1;
+            margin-bottom: 25px;
+            line-height: 1.7;
+            font-weight: 400;
+        }
+        
+        .description-container {
+            position: relative;
+        }
+        
+        .description-text {
+            display: -webkit-box;
+            -webkit-line-clamp: 3;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            line-height: 1.7;
+            color: #e2e8f0;
+            font-size: 1.05rem;
+        }
+        
+        .description-text.expanded {
+            -webkit-line-clamp: unset;
+            overflow: visible;
+        }
+        
+        .expand-btn {
+            background: none;
+            border: none;
+            color: #60a5fa;
+            cursor: pointer;
+            font-weight: 600;
+            font-size: inherit;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            padding: 0;
+            margin: 0;
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+        }
+        
+        .expand-btn:hover {
+            color: #2a9d8f;
+            text-shadow: 0 0 8px rgba(42,157,143,0.5);
+            transform: scale(1.05);
+        }
+        
+        .expand-symbol {
+            font-size: 0.9em;
+            transition: transform 0.3s ease;
+        }
+        
+        .expand-btn:hover .expand-symbol {
+            transform: scale(1.2);
+        }
+        
+        .info-section {
+            background: linear-gradient(135deg, #2a9d8f 0%, #21867d 50%, #2a9d8f 100%);
+            backdrop-filter: blur(20px);
+            padding: 30px;
+            border-radius: 20px;
+            border: 1px solid #2a9d8f;
+            box-shadow: 
+                0 10px 30px rgba(42,157,143,0.2),
+                inset 0 1px 0 rgba(255,255,255,0.1),
+                0 0 40px rgba(42,157,143,0.3);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .info-section::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 4px;
+            height: 100%;
+            background: linear-gradient(135deg, #2a9d8f 0%, #21867d 100%);
+            border-radius: 0 2px 2px 0;
+            z-index: 10;
+        }
+        
+        .info-title {
+            font-family: 'Playfair Display', serif;
+            font-weight: 600;
+            color: #f8fafc;
+            margin-bottom: 15px;
+            font-size: 1.3rem;
+            text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
+            position: relative;
+            z-index: 10;
+        }
+        
+        .info-content {
+            line-height: 1.7;
+            color: #e2e8f0;
+            font-size: 1.05rem;
+            position: relative;
+            z-index: 10;
+        }
+        
+        .prescribing-info {
+            background: linear-gradient(135deg, #2a9d8f 0%, #21867d 50%, #2a9d8f 100%);
+            backdrop-filter: blur(20px);
+            padding: 40px;
+            border-radius: 25px;
+            text-align: center;
+            margin-top: 30px;
+            border: 1px solid #2a9d8f;
+            box-shadow: 
+                0 20px 40px rgba(42,157,143,0.3),
+                0 0 60px rgba(42,157,143,0.1),
+                inset 0 1px 0 rgba(255,255,255,0.1),
+                0 0 80px rgba(42,157,143,0.4);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .prescribing-info p,
+        .prescribing-info a,
+        .prescribing-info span {
+            position: relative;
+            z-index: 10;
+        }
+        
+        .pdf-btn {
+            background: linear-gradient(135deg, #2a9d8f 0%, #21867d 100%);
+            color: #fff;
+            padding: 18px 40px;
+            border: none;
+            border-radius: 30px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-block;
+            box-shadow: 
+                0 8px 25px rgba(42,157,143,0.3),
+                inset 0 1px 0 rgba(255,255,255,0.2);
+            letter-spacing: 0.5px;
+        }
+        
+        .pdf-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 
+                0 12px 35px rgba(42,157,143,0.4),
+                inset 0 1px 0 rgba(255,255,255,0.3);
+            background: linear-gradient(135deg, #21867d 0%, #18675f 100%);
+        }
+        
+        .related-products {
+            margin-top: 80px;
+            background: linear-gradient(135deg, #2a9d8f 0%, #21867d 50%, #2a9d8f 100%);
+            backdrop-filter: blur(20px);
+            padding: 60px 40px;
+            border-radius: 25px;
+            border: 1px solid #2a9d8f;
+            box-shadow: 
+                0 25px 50px rgba(42,157,143,0.3),
+                0 0 60px rgba(42,157,143,0.2),
+                inset 0 1px 0 rgba(255,255,255,0.1),
+                0 0 80px rgba(42,157,143,0.4);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .section-title {
+            font-family: 'Playfair Display', serif;
+            font-size: 2.2rem;
+            font-weight: 700;
+            color: #f8fafc;
+            margin-bottom: 50px;
+            text-align: center;
+            position: relative;
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+            z-index: 10;
+        }
+        
+        .section-title::after {
+            content: '';
+            position: absolute;
+            bottom: -15px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 100px;
+            height: 4px;
+            background: linear-gradient(135deg, #2a9d8f 0%, #21867d 100%);
+            border-radius: 2px;
+            box-shadow: 0 0 20px rgba(42,157,143,0.5);
+        }
+        
+        .products-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 30px;
+            position: relative;
+            z-index: 10;
+        }
+        
+        .product-card {
+            background: linear-gradient(135deg, #2a9d8f 0%, #21867d 50%, #2a9d8f 100%);
+            backdrop-filter: blur(20px);
+            border-radius: 25px;
+            overflow: hidden;
+            border: 1px solid #2a9d8f;
+            box-shadow: 
+                0 15px 35px rgba(0, 0, 0, 0.2),
+                0 0 40px rgba(42,157,143,0.1),
+                inset 0 1px 0 rgba(255, 255, 255, 0.1);
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            cursor: pointer;
+        }
+        
+        .product-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 
+                0 25px 50px rgba(0, 0, 0, 0.3),
+                0 0 60px rgba(42,157,143,0.2);
+        }
+        
+        .product-card-image {
+            width: 100%;
+            height: 220px;
+            object-fit: cover;
+            background: linear-gradient(135deg, #2a9d8f 0%, #21867d 100%);
+            transition: transform 0.4s ease;
+        }
+        
+        .product-card:hover .product-card-image {
+            transform: scale(1.05);
+        }
+        
+        .product-card-content {
+            padding: 30px;
+        }
+        
+        .product-card-title {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.3rem;
+            font-weight: 600;
+            color: #f8fafc;
+            margin-bottom: 12px;
+            text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
+        }
+        
+        .product-card-desc {
+            color: #cbd5e1;
+            font-size: 1rem;
+            line-height: 1.6;
+            font-weight: 400;
+        }
+        
+        .fade-in {
+            animation: fadeIn 1s ease-in;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        @media (max-width: 768px) {
+            .product-main {
+                grid-template-columns: 1fr;
+                gap: 40px;
+                padding: 30px;
+            }
+            .product-title {
+                font-size: 2rem;
+            }
+            .products-grid {
+                grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            }
+        }
+        
+        .main-image.zoomable {
+            transition: transform 0.4s ease;
+            cursor: zoom-in;
+        }
+        
+        .main-image.zoomable:hover {
+            transform: scale(1.05);
+            z-index: 2;
+        }
+        
+        .slider-nav-btn {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            background: rgba(42,157,143,0.8);
+            backdrop-filter: blur(10px);
+            border: 1px solid #21867d;
+            color: #f8fafc;
+            border-radius: 50%;
+            width: 50px;
+            height: 50px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            font-size: 1.2rem;
+            transition: all 0.3s ease;
+            z-index: 10;
+        }
+        
+        .slider-nav-btn:hover {
+            background: rgba(42,157,143,0.8);
+            transform: translateY(-50%) scale(1.1);
+            box-shadow: 0 0 20px rgba(42,157,143,0.5);
+        }
+        
+        #prevImage {
+            left: 15px;
+        }
+        
+        #nextImage {
+            right: 15px;
+        }
+
+        /* Primary text - make pure white */
+        .product-title, .section-title, .info-title, .product-card-title {
+            color: #ffffff;
+        }
+
+        /* Secondary text - bright white */
+        .info-content, .product-subtitle, .description-text {
+            color: #ffffff;
+        }
+
+        /* Tertiary text - light gray but brighter */
+        .product-card-desc {
+            color: #f1f5f9;
+        }
+
+        /* Banner text - pure white */
+        .sliding-text {
+            color: #ffffff;
+        }
+
+        /* Strong text shadows for all primary text */
+        .product-title, .section-title, .info-title {
+            text-shadow: 0 2px 8px rgba(0, 0, 0, 0.8);
+        }
+
+        /* Medium shadows for body text */
+        .info-content, .description-text, .product-subtitle {
+            text-shadow: 0 1px 4px rgba(0, 0, 0, 0.7);
+        }
+
+        /* Subtle shadows for smaller text */
+        .product-card-desc, .sliding-text {
+            text-shadow: 0 1px 3px rgba(0, 0, 0, 0.6);
+        }
+
+        /* Make text appear bolder without changing structure */
+        .info-content, .description-text {
+            font-weight: 500;
+        }
+
+        .product-subtitle {
+            font-weight: 500;
+        }
+
+        .product-card-desc {
+            font-weight: 400;
+        }
+
+        /* PDF button text */
+        .pdf-btn {
+            color: #ffffff;
+            text-shadow: 0 1px 3px rgba(0, 0, 0, 0.5);
+            font-weight: 600;
+        }
+
+        /* Expand button text */
+        .expand-btn {
+            color: #ffffff;
+            text-shadow: 0 1px 2px rgba(0, 0, 0, 0.5);
+            font-weight: 600;
+        }
+
+        /* Product main container - increase glow by 50% */
+        .product-main {
+            box-shadow: 
+                0 37px 75px rgba(42,157,143,0.45),
+                0 0 90px rgba(42,157,143,0.3),
+                inset 0 1px 0 rgba(255,255,255,0.1),
+                0 0 120px rgba(42,157,143,0.6);
+        }
+
+        /* Info sections - increase glow by 50% */
+        .info-section {
+            box-shadow: 
+                0 15px 45px rgba(42,157,143,0.3),
+                inset 0 1px 0 rgba(255,255,255,0.1),
+                0 0 60px rgba(42,157,143,0.45);
+        }
+
+        /* Product cards - increase glow by 50% */
+        .product-card:hover {
+            box-shadow: 
+                0 37px 75px rgba(0, 0, 0, 0.45),
+                0 0 90px rgba(42,157,143,0.3);
+        }
+
+        /* Sliding banner - increase glow by 50% */
+        .sliding-banner {
+            box-shadow: 
+                0 0 60px rgba(42,157,143,0.225),
+                inset 0 1px 0 rgba(255,255,255,0.1),
+                0 0 75px rgba(42,157,143,0.6);
+        }
+
+        /* Related products section - increase glow by 50% */
+        .related-products {
+            box-shadow: 
+                0 37px 75px rgba(42,157,143,0.45),
+                0 0 90px rgba(42,157,143,0.3),
+                inset 0 1px 0 rgba(255,255,255,0.1),
+                0 0 120px rgba(42,157,143,0.6);
+        }
+
+        /* Glassmorphism + Glow for all major containers */
+        .product-main, .info-section, .product-card, .sliding-banner, .related-products, .prescribing-info {
+            background: linear-gradient(135deg,
+                rgba(42,157,143,0.95) 0%,
+                rgba(33,134,125,0.85) 25%,
+                rgba(42,157,143,0.92) 50%,
+                rgba(33,134,125,0.85) 75%,
+                rgba(42,157,143,0.95) 100%),
+                radial-gradient(circle at 60% 20%, var(--white-overlay) 0%, transparent 80%);
+            backdrop-filter: blur(20px) saturate(1.3);
+            -webkit-backdrop-filter: blur(20px) saturate(1.3);
+            border: 1.5px solid var(--glass-border);
+            box-shadow:
+                0 37px 100px var(--glow-outer),
+                0 0 120px var(--glow-extended),
+                0 0 60px var(--glow-main),
+                0 0 120px var(--glow-extended),
+                0 0 0 4px var(--glass-bg-strong) inset,
+                0 1px 0 var(--white-overlay) inset;
+            position: relative;
+            z-index: 10;
+            /* Glass reflection */
+            overflow: hidden;
+        }
+        
+        /* Pulsing glow animation */
+        @keyframes pulseGlow {
+            0%, 100% { box-shadow:
+                0 37px 100px var(--glow-outer),
+                0 0 120px var(--glow-extended),
+                0 0 60px var(--glow-main),
+                0 0 120px var(--glow-extended),
+                0 0 0 4px var(--glass-bg-strong) inset,
+                0 1px 0 var(--white-overlay) inset;
+            }
+            50% { box-shadow:
+                0 47px 140px var(--glow-extended),
+                0 0 180px var(--glow-extended),
+                0 0 90px var(--glow-main),
+                0 0 180px var(--glow-extended),
+                0 0 0 8px var(--glass-bg-strong) inset,
+                0 2px 0 var(--white-overlay) inset;
+            }
+        }
+        .product-main, .sliding-banner, .related-products, .prescribing-info {
+            animation: pulseGlow 3.5s ease-in-out infinite;
+        }
+        .info-section, .product-card {
+            animation: pulseGlow 5s ease-in-out infinite;
+        }
+        
+        /* Gradient overlays for extra depth */
+        .product-main::before, .info-section::before, .product-card::before, .sliding-banner::before, .related-products::before, .prescribing-info::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 100%;
+            pointer-events: none;
+            z-index: 2;
+            background: radial-gradient(circle at 60% 20%, rgba(255,255,255,0.10) 0%, transparent 80%),
+                        linear-gradient(135deg, rgba(255,255,255,0.08) 0%, transparent 100%);
+            mix-blend-mode: lighten;
+        }
+        
+        /* Glass border highlight */
+        .product-main, .info-section, .product-card, .sliding-banner, .related-products, .prescribing-info {
+            border-radius: 28px;
+            border: 1.5px solid var(--glass-border);
+        }
+        
+        /* Stronger text shadows and brightness */
+        .product-title, .section-title, .info-title, .product-card-title {
+            color: #fff;
+            text-shadow: 0 4px 16px rgba(42,157,143,0.7), 0 2px 8px rgba(0,0,0,0.8);
+            filter: brightness(1.18);
+        }
+        .info-content, .product-subtitle, .description-text {
+            color: #fafdff;
+            text-shadow: 0 2px 8px rgba(42,157,143,0.5), 0 1px 4px rgba(0,0,0,0.7);
+            filter: brightness(1.12);
+        }
+        .product-card-desc {
+            color: #f1f5f9;
+            text-shadow: 0 1px 3px rgba(42,157,143,0.4), 0 1px 3px rgba(0,0,0,0.6);
+            filter: brightness(1.10);
+        }
+        .sliding-text {
+            color: #fff;
+            text-shadow: 0 2px 8px rgba(42,157,143,0.7), 0 1px 3px rgba(0,0,0,0.6);
+            filter: brightness(1.18);
+        }
+        
+        /* Enhanced hover glows */
+        .product-main:hover, .info-section:hover, .product-card:hover, .sliding-banner:hover, .related-products:hover, .prescribing-info:hover {
+            box-shadow:
+                0 57px 180px var(--glow-extended),
+                0 0 200px var(--glow-extended),
+                0 0 120px var(--glow-main),
+                0 0 200px var(--glow-extended),
+                0 0 0 12px var(--glass-bg-strong) inset,
+                0 2px 0 var(--white-overlay) inset;
+            transition: box-shadow 0.4s cubic-bezier(0.4,0,0.2,1);
+        }
+        
+        /* Gradient border for definition */
+        .product-main, .info-section, .product-card, .sliding-banner, .related-products, .prescribing-info {
+            border-image: linear-gradient(135deg, var(--teal-main), var(--teal-dark), var(--teal-main)) 1;
+        }
+        
+        /* Light reflection effect */
+        .product-main::after, .info-section::after, .product-card::after, .sliding-banner::after, .related-products::after, .prescribing-info::after {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 100%;
+            pointer-events: none;
+            z-index: 3;
+            background: linear-gradient(120deg, rgba(255,255,255,0.13) 0%, transparent 60%);
+            opacity: 0.7;
+            mix-blend-mode: screen;
+        }
+        
+        /* Section-specific tweaks for extra glass and glow */
+        .product-main {
+            box-shadow:
+                0 57px 180px var(--glow-extended),
+                0 0 200px var(--glow-extended),
+                0 0 120px var(--glow-main),
+                0 0 200px var(--glow-extended),
+                0 0 0 12px var(--glass-bg-strong) inset,
+                0 2px 0 var(--white-overlay) inset;
+            background: linear-gradient(135deg,
+                rgba(42,157,143,0.98) 0%,
+                rgba(33,134,125,0.92) 25%,
+                rgba(42,157,143,0.97) 50%,
+                rgba(33,134,125,0.92) 75%,
+                rgba(42,157,143,0.98) 100%),
+                radial-gradient(circle at 60% 20%, var(--white-overlay) 0%, transparent 80%);
+        }
+        .info-section {
+            background: linear-gradient(135deg,
+                rgba(42,157,143,0.93) 0%,
+                rgba(33,134,125,0.88) 25%,
+                rgba(42,157,143,0.93) 50%,
+                rgba(33,134,125,0.88) 75%,
+                rgba(42,157,143,0.93) 100%),
+                radial-gradient(circle at 60% 20%, var(--white-overlay) 0%, transparent 80%);
+        }
+        .product-card {
+            background: linear-gradient(135deg,
+                rgba(42,157,143,0.92) 0%,
+                rgba(33,134,125,0.85) 25%,
+                rgba(42,157,143,0.92) 50%,
+                rgba(33,134,125,0.85) 75%,
+                rgba(42,157,143,0.92) 100%),
+                radial-gradient(circle at 60% 20%, var(--white-overlay) 0%, transparent 80%);
+            transition: box-shadow 0.4s cubic-bezier(0.4,0,0.2,1), transform 0.4s cubic-bezier(0.4,0,0.2,1);
+        }
+        .product-card:hover {
+            transform: translateY(-12px) scale(1.03);
+        }
+        .sliding-banner {
+            background: linear-gradient(135deg,
+                rgba(42,157,143,0.97) 0%,
+                rgba(33,134,125,0.90) 25%,
+                rgba(42,157,143,0.97) 50%,
+                rgba(33,134,125,0.90) 75%,
+                rgba(42,157,143,0.97) 100%),
+                radial-gradient(circle at 60% 20%, var(--white-overlay) 0%, transparent 80%);
+        }
+        .related-products {
+            background: linear-gradient(135deg,
+                rgba(42,157,143,0.96) 0%,
+                rgba(33,134,125,0.89) 25%,
+                rgba(42,157,143,0.96) 50%,
+                rgba(33,134,125,0.89) 75%,
+                rgba(42,157,143,0.96) 100%),
+                radial-gradient(circle at 60% 20%, var(--white-overlay) 0%, transparent 80%);
+        }
+        .prescribing-info {
+            background: linear-gradient(135deg,
+                rgba(42,157,143,0.97) 0%,
+                rgba(33,134,125,0.91) 25%,
+                rgba(42,157,143,0.97) 50%,
+                rgba(33,134,125,0.91) 75%,
+                rgba(42,157,143,0.97) 100%),
+                radial-gradient(circle at 60% 20%, var(--white-overlay) 0%, transparent 80%);
+        }
+        
+        /* PDF button pulsing glow */
+        .pdf-btn {
+            background: linear-gradient(135deg, var(--teal-main) 0%, var(--teal-dark) 100%);
+            color: #fff;
+            padding: 18px 40px;
+            border: none;
+            border-radius: 30px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-block;
+            box-shadow: 0 0 30px var(--glow-main), 0 0 60px var(--glow-extended), 0 1px 0 var(--white-overlay) inset;
+            letter-spacing: 0.5px;
+            animation: pulseGlow 2.5s ease-in-out infinite;
+            filter: brightness(1.18);
+        }
+        .pdf-btn:hover {
+            box-shadow: 0 0 60px var(--glow-extended), 0 0 120px var(--glow-extended), 0 2px 0 var(--white-overlay) inset;
+            background: linear-gradient(135deg, var(--teal-dark) 0%, #18675f 100%);
+            filter: brightness(1.22);
+        }
+        
+        /* Thumbnail and main image glass effect */
+        .main-image, .thumbnail {
+            background: linear-gradient(135deg, rgba(42,157,143,0.7) 0%, rgba(33,134,125,0.6) 100%);
+            box-shadow: 0 0 30px var(--glow-main), 0 0 60px var(--glow-extended), 0 1px 0 var(--white-overlay) inset;
+            border: 1.5px solid var(--glass-border);
+            filter: brightness(1.10);
+        }
+        .main-image.zoomable:hover {
+            box-shadow: 0 0 60px var(--glow-extended), 0 0 120px var(--glow-extended), 0 2px 0 var(--white-overlay) inset;
+            filter: brightness(1.18);
+        }
+        .thumbnail.active, .thumbnail:hover {
+            box-shadow: 0 0 40px var(--glow-extended), 0 0 80px var(--glow-extended), 0 2px 0 var(--white-overlay) inset;
+            filter: brightness(1.18);
+        }
+        
+        /* Slider nav buttons glass and glow */
+        .slider-nav-btn {
+            background: linear-gradient(135deg, rgba(42,157,143,0.85) 0%, rgba(33,134,125,0.7) 100%);
+            box-shadow: 0 0 30px var(--glow-main), 0 0 60px var(--glow-extended), 0 1px 0 var(--white-overlay) inset;
+            border: 1.5px solid var(--glass-border);
+            color: #fff;
+            filter: brightness(1.15);
+            transition: box-shadow 0.3s, filter 0.3s;
+        }
+        .slider-nav-btn:hover {
+            box-shadow: 0 0 60px var(--glow-extended), 0 0 120px var(--glow-extended), 0 2px 0 var(--white-overlay) inset;
+            filter: brightness(1.22);
+        }
+        
+        /* Responsive: maintain glass and glow on mobile */
+        @media (max-width: 768px) {
+            .product-main, .related-products, .sliding-banner, .info-section, .prescribing-info {
+                padding: 18px 8px !important;
+                border-radius: 18px;
+            }
+            .product-title {
+                font-size: 1.5rem;
+            }
+            .products-grid {
+                grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            }
+        }
+
+        /* ...existing styles... */
+        .alco-animated-bg {
+            will-change: transform, opacity;
+            transform: translateZ(0);
+            backface-visibility: hidden;
+            /* existing styles remain below */
+        }
+        .alco-svg-bg {
+            will-change: transform, opacity;
+            transform: translateZ(0);
+            backface-visibility: hidden;
+            /* existing styles remain below */
+        }
+    </style>
+</head>
+<body>
+    <!-- Animated green gradient background layer -->
+    <div class="alco-animated-bg"></div>
+    <!-- SVG lines background layer -->
+    <div class="alco-svg-bg">
+        <svg width="100%" height="100%" viewBox="0 0 1000 600" preserveAspectRatio="xMidYMid slice">
+            <path class="alco-bg-line" d="M 0 300 Q 250 200, 500 300 T 1000 300" stroke-width="2" style="opacity: 0.3;"></path>
+            <path class="alco-bg-line" d="M 0 200 Q 333 100, 666 200 T 1000 200" stroke-width="1.5" style="opacity: 0.25;"></path>
+            <path class="alco-bg-line" d="M 0 400 Q 200 500, 400 400 T 800 400 Q 900 350, 1000 400" stroke-width="1.8" style="opacity: 0.35;"></path>
+            <path class="alco-bg-line" d="M 200 0 Q 250 150, 200 300 T 200 600" stroke-width="1.2" style="opacity: 0.2;"></path>
+            <path class="alco-bg-line" d="M 800 0 Q 750 200, 800 400 T 800 600" stroke-width="1.5" style="opacity: 0.3;"></path>
+            <path class="alco-bg-line" d="M 0 100 C 300 50, 700 150, 1000 100" stroke-width="1" style="opacity: 0.2;"></path>
+            <path class="alco-bg-line" d="M 0 500 C 400 450, 600 550, 1000 500" stroke-width="1.3" style="opacity: 0.28;"></path>
+            <path class="alco-bg-arrow" d="M 490 295 L 510 300 L 490 305 Z" style="opacity: 0.4;"></path>
+            <path class="alco-bg-arrow" d="M 190 295 L 210 300 L 190 305 Z" style="opacity: 0.3;"></path>
+            <path class="alco-bg-arrow" d="M 790 395 L 810 400 L 790 405 Z" style="opacity: 0.35;"></path>
+            <circle cx="500" cy="300" r="3" fill="rgba(42,157,143,0.4)" style="animation: alco-pulse 4s ease-in-out infinite;"></circle>
+            <circle cx="200" cy="200" r="2" fill="rgba(42,157,143,0.3)" style="animation: alco-pulse 6s ease-in-out infinite;"></circle>
+            <circle cx="800" cy="400" r="2.5" fill="rgba(42,157,143,0.35)" style="animation: alco-pulse 5s ease-in-out infinite;"></circle>
+        </svg>
+    </div>
+    <style>
+    .alco-animated-bg {
+        position: fixed;
+        top: 0; left: 0;
+        width: 100vw; height: 100vh;
+        z-index: 0;
+        pointer-events: none;
+        background: linear-gradient(135deg, #2a9d8f 0%, #2a9d8f 25%, #264653 50%, #264653 75%, #2a9d8f 100%);
+        background-size: 400% 400%;
+        animation: alco-gradientShift 12s ease-in-out infinite;
+    }
+    @keyframes alco-gradientShift {
+        0% { background-position: 0% 50%; }
+        25% { background-position: 100% 50%; }
+        50% { background-position: 100% 50%; }
+        75% { background-position: 0% 50%; }
+        100% { background-position: 0% 50%; }
+    }
+    .alco-svg-bg {
+        position: fixed;
+        top: 0; left: 0;
+        width: 100vw; height: 100vh;
+        z-index: 1;
+        pointer-events: none;
+    }
+    .alco-bg-line {
+        stroke: rgba(42,157,143,0.3);
+        stroke-width: 1.5;
+        fill: none;
+        animation: alco-flow 15s linear infinite;
+    }
+    .alco-bg-arrow {
+        fill: rgba(42,157,143,0.3);
+        stroke: none;
+        animation: alco-arrowPulse 6s ease-in-out infinite;
+    }
+    @keyframes alco-flow {
+        0% { stroke-dasharray: 0 100; stroke-dashoffset: 0; opacity: 0.2; }
+        50% { stroke-dasharray: 50 50; stroke-dashoffset: -25; opacity: 0.4; }
+        100% { stroke-dasharray: 100 0; stroke-dashoffset: -100; opacity: 0.2; }
+    }
+    @keyframes alco-arrowPulse {
+        0%, 100% { opacity: 0.3; transform: scale(1); }
+        50% { opacity: 0.6; transform: scale(1.1); }
+    }
+    @keyframes alco-pulse {
+        0%, 100% { opacity: 0.2; }
+        50% { opacity: 0.4; }
+    }
+    body > *:not(.alco-animated-bg):not(.alco-svg-bg) {
+        position: relative;
+        z-index: 2;
+    }
+    </style>
+    <!-- End animated background -->
+    <div class="container">
+        <!-- Banner Section with Background -->
+        <div class="sliding-banner">
+            <div class="section-bg">
+                <svg width="100%" height="100%" viewBox="0 0 1000 150" preserveAspectRatio="xMidYMid slice">
+                    <line x1="0" y1="30" x2="1000" y2="90" stroke-width="1.5" style="opacity: 0.3;"></line>
+                    <line x1="0" y1="60" x2="1000" y2="30" stroke-width="1" style="opacity: 0.2;"></line>
+                    <line x1="0" y1="90" x2="1000" y2="120" stroke-width="1.2" style="opacity: 0.25;"></line>
+                    <line x1="200" y1="0" x2="800" y2="150" stroke-width="2" style="opacity: 0.4;"></line>
+                    <line x1="100" y1="150" x2="600" y2="0" stroke-width="1.5" style="opacity: 0.35;"></line>
+                    <path d="M 0 100 C 200 80, 400 110, 600 90 L 1000 70" stroke-width="1.3" style="opacity: 0.3;"></path>
+                    <path d="M 0 40 Q 300 20, 600 40 T 1000 60" stroke-width="1.1" style="opacity: 0.2;"></path>
+                    <path class="arrow" d="M 490 85 L 500 90 L 490 95 Z" transform="rotate(15, 500, 90)" style="opacity: 0.4;"></path>
+                    <path class="arrow" d="M 290 65 L 300 70 L 290 75 Z" transform="rotate(-10, 300, 70)" style="opacity: 0.35;"></path>
+                </svg>
+            </div>
+            <div class="sliding-text">
+                {{ banner_text|default:"Welcome to our Premium Product Collection - Excellence in Every Detail" }}
+            </div>
+        </div>
+        
+        <!-- Product Main Section with Background -->
+        <div class="product-main fade-in">
+            <div class="section-bg">
+                <svg width="100%" height="100%" viewBox="0 0 1000 600" preserveAspectRatio="xMidYMid slice">
+                    <line x1="0" y1="100" x2="1000" y2="300" stroke-width="2" style="opacity: 0.25;"></line>
+                    <line x1="0" y1="200" x2="1000" y2="100" stroke-width="1" style="opacity: 0.15;"></line>
+                    <line x1="0" y1="300" x2="1000" y2="500" stroke-width="1.5" style="opacity: 0.3;"></line>
+                    <line x1="100" y1="0" x2="500" y2="600" stroke-width="1" style="opacity: 0.2;"></line>
+                    <line x1="200" y1="600" x2="800" y2="0" stroke-width="2.5" style="opacity: 0.4;"></line>
+                    <line x1="300" y1="0" x2="700" y2="600" stroke-width="1.2" style="opacity: 0.25;"></line>
+                    <line x1="400" y1="600" x2="900" y2="0" stroke-width="1.8" style="opacity: 0.3;"></line>
+                    <line x1="0" y1="50" x2="1000" y2="400" stroke-width="1.5" style="opacity: 0.2;"></line>
+                    <line x1="0" y1="450" x2="1000" y2="150" stroke-width="2" style="opacity: 0.35;"></line>
+                    <line x1="150" y1="0" x2="600" y2="600" stroke-width="1.3" style="opacity: 0.23;"></line>
+                    <path d="M 0 500 C 200 400, 400 550, 600 450 L 1000 300" stroke-width="1.8" style="opacity: 0.3;"></path>
+                    <path d="M 0 150 Q 300 50, 600 150 T 1000 250" stroke-width="1.2" style="opacity: 0.15;"></path>
+                    <path d="M 800 0 C 700 200, 900 400, 700 600" stroke-width="2" style="opacity: 0.4;"></path>
+                    <path d="M 0 350 Q 250 250, 500 350 T 1000 450" stroke-width="1.5" style="opacity: 0.25;"></path>
+                    <path d="M 200 0 C 300 150, 100 300, 400 450 L 800 600" stroke-width="1.4" style="opacity: 0.27;"></path>
+                    <path class="arrow" d="M 490 295 L 500 300 L 490 305 Z" transform="rotate(22, 500, 300)" style="opacity: 0.35;"></path>
+                    <path class="arrow" d="M 590 445 L 600 450 L 590 455 Z" transform="rotate(10, 600, 450)" style="opacity: 0.35;"></path>
+                    <path class="arrow" d="M 990 295 L 1000 300 L 990 305 Z" transform="rotate(10, 1000, 300)" style="opacity: 0.35;"></path>
+                    <path class="arrow" d="M 390 445 L 400 450 L 390 455 Z" transform="rotate(-15, 400, 450)" style="opacity: 0.33;"></path>
+                </svg>
+            </div>
+
+            <div class="product-images">
+                <div class="slider-wrapper" style="position:relative;">
+                    {% if product.image %}
+                        <img class="main-image zoomable" id="mainProductImage" src="{{ product.image.url }}" alt="{{ product.name }}">
+                    {% elif images %}
+                        <img class="main-image zoomable" id="mainProductImage" src="{{ images.0.image.url }}" alt="{{ product.name }}">
+                    {% else %}
+                        <img class="main-image zoomable" id="mainProductImage" src="{% static 'images/default-product.png' %}" alt="No image">
+                    {% endif %}
+                    {% if images %}
+                        <button id="prevImage" class="slider-nav-btn">&#8592;</button>
+                        <button id="nextImage" class="slider-nav-btn">&#8594;</button>
+                    {% endif %}
+                </div>
+                <div class="image-thumbnails">
+                    {% if product.image %}
+                        <img src="{{ product.image.url }}" alt="Main image" class="thumbnail active" onclick="changeImage(this)">
+                    {% endif %}
+                    {% for img in images %}
+                        <img src="{{ img.image.url }}" alt="Product image" class="thumbnail" onclick="changeImage(this)">
+                    {% endfor %}
+                </div>
+            </div>
+            
+            <div class="product-info">
+                <h1 class="product-title">{{ product.name }}{% if product.generic_name %} <span style="font-size:1.2rem;color:#cbd5e1;font-weight:normal;">({{ product.generic_name }})</span>{% endif %}</h1>
+                
+                <div class="product-subtitle">
+                    <div class="description-container">
+                        <div class="description-text" id="productDescription">{{ product.description|safe }}</div>
+                    </div>
+                </div>
+                
+                <div class="info-section">
+                    <div class="section-bg">
+                        <svg width="100%" height="100%" viewBox="0 0 1000 200" preserveAspectRatio="xMidYMid slice">
+                            <line x1="0" y1="50" x2="1000" y2="150" stroke-width="1.5" style="opacity: 0.2;"></line>
+                            <line x1="0" y1="100" x2="1000" y2="50" stroke-width="1" style="opacity: 0.15;"></line>
+                            <path d="M 0 120 C 200 100, 400 150, 600 100 L 1000 80" stroke-width="1.2" style="opacity: 0.25;"></path>
+                            <path class="arrow" d="M 490 95 L 500 100 L 490 105 Z" transform="rotate(10, 500, 100)" style="opacity: 0.3;"></path>
+                        </svg>
+                    </div>
+                    <div class="info-title">Pack Size</div>
+                    <div class="info-content" id="packContent">{{ product.pack_size }}</div>
+                </div>
+                
+                <div class="info-section">
+                    <div class="section-bg">
+                        <svg width="100%" height="100%" viewBox="0 0 1000 200" preserveAspectRatio="xMidYMid slice">
+                            <line x1="0" y1="50" x2="1000" y2="150" stroke-width="1.5" style="opacity: 0.2;"></line>
+                            <line x1="0" y1="100" x2="1000" y2="50" stroke-width="1" style="opacity: 0.15;"></line>
+                            <path d="M 0 120 C 200 100, 400 150, 600 100 L 1000 80" stroke-width="1.2" style="opacity: 0.25;"></path>
+                            <path class="arrow" d="M 490 95 L 500 100 L 490 105 Z" transform="rotate(10, 500, 100)" style="opacity: 0.3;"></path>
+                        </svg>
+                    </div>
+                    <div class="info-title">Composition</div>
+                    <div class="info-content" id="compositionContent">{{ product.composition }}</div>
+                </div>
+                
+                <div class="info-section">
+                    <div class="section-bg">
+                        <svg width="100%" height="100%" viewBox="0 0 1000 200" preserveAspectRatio="xMidYMid slice">
+                            <line x1="0" y1="50" x2="1000" y2="150" stroke-width="1.5" style="opacity: 0.2;"></line>
+                            <line x1="0" y1="100" x2="1000" y2="50" stroke-width="1" style="opacity: 0.15;"></line>
+                            <path d="M 0 120 C 200 100, 400 150, 600 100 L 1000 80" stroke-width="1.2" style="opacity: 0.25;"></path>
+                            <path class="arrow" d="M 490 95 L 500 100 L 490 105 Z" transform="rotate(10, 500, 100)" style="opacity: 0.3;"></path>
+                        </svg>
+                    </div>
+                    <div class="info-title">Indication</div>
+                    <div class="info-content" id="indicationContent">{{ product.indication }}</div>
+                </div>
+                
+                <div class="info-section">
+                    <div class="section-bg">
+                        <svg width="100%" height="100%" viewBox="0 0 1000 200" preserveAspectRatio="xMidYMid slice">
+                            <line x1="0" y1="50" x2="1000" y2="150" stroke-width="1.5" style="opacity: 0.2;"></line>
+                            <line x1="0" y1="100" x2="1000" y2="50" stroke-width="1" style="opacity: 0.15;"></line>
+                            <path d="M 0 120 C 200 100, 400 150, 600 100 L 1000 80" stroke-width="1.2" style="opacity: 0.25;"></path>
+                            <path class="arrow" d="M 490 95 L 500 100 L 490 105 Z" transform="rotate(10, 500, 100)" style="opacity: 0.3;"></path>
+                        </svg>
+                    </div>
+                    <div class="info-title">Dosage</div>
+                    <div class="info-content" id="dosageContent">{{ product.dosage }}</div>
+                </div>
+                
+                <div class="prescribing-info">
+                    <div class="section-bg">
+                        <svg width="100%" height="100%" viewBox="0 0 1000 200" preserveAspectRatio="xMidYMid slice">
+                            <line x1="0" y1="50" x2="1000" y2="150" stroke-width="1.5" style="opacity: 0.2;"></line>
+                            <line x1="0" y1="100" x2="1000" y2="50" stroke-width="1" style="opacity: 0.15;"></line>
+                            <path d="M 0 120 C 200 100, 400 150, 600 100 L 1000 80" stroke-width="1.2" style="opacity: 0.25;"></path>
+                            <path class="arrow" d="M 490 95 L 500 100 L 490 105 Z" transform="rotate(10, 500, 100)" style="opacity: 0.3;"></path>
+                        </svg>
+                    </div>
+                    <p style="margin-bottom: 20px; font-weight: 600; font-size: 1.2rem;">Complete Prescribing Information</p>
+                    {% if product.pdf %}
+                        <a href="{{ product.pdf.url }}" class="pdf-btn" target="_blank">📄 View PDF Documentation</a>
+                    {% else %}
+                        <span style="color:#64748b;">No PDF documentation available.</span>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+        
+        <div class="related-products">
+            <div class="section-bg">
+                <svg width="100%" height="100%" viewBox="0 0 1000 600" preserveAspectRatio="xMidYMid slice">
+                    <line x1="0" y1="100" x2="1000" y2="300" stroke-width="2" style="opacity: 0.25;"></line>
+                    <line x1="0" y1="200" x2="1000" y2="100" stroke-width="1" style="opacity: 0.15;"></line>
+                    <line x1="0" y1="300" x2="1000" y2="500" stroke-width="1.5" style="opacity: 0.3;"></line>
+                    <line x1="100" y1="0" x2="500" y2="600" stroke-width="1" style="opacity: 0.2;"></line>
+                    <line x1="200" y1="600" x2="800" y2="0" stroke-width="2.5" style="opacity: 0.4;"></line>
+                    <line x1="300" y1="0" x2="700" y2="600" stroke-width="1.2" style="opacity: 0.25;"></line>
+                    <line x1="400" y1="600" x2="900" y2="0" stroke-width="1.8" style="opacity: 0.3;"></line>
+                    <line x1="0" y1="50" x2="1000" y2="400" stroke-width="1.5" style="opacity: 0.2;"></line>
+                    <line x1="0" y1="450" x2="1000" y2="150" stroke-width="2" style="opacity: 0.35;"></line>
+                    <line x1="150" y1="0" x2="600" y2="600" stroke-width="1.3" style="opacity: 0.23;"></line>
+                    <path d="M 0 500 C 200 400, 400 550, 600 450 L 1000 300" stroke-width="1.8" style="opacity: 0.3;"></path>
+                    <path d="M 0 150 Q 300 50, 600 150 T 1000 250" stroke-width="1.2" style="opacity: 0.15;"></path>
+                    <path d="M 800 0 C 700 200, 900 400, 700 600" stroke-width="2" style="opacity: 0.4;"></path>
+                    <path d="M 0 350 Q 250 250, 500 350 T 1000 450" stroke-width="1.5" style="opacity: 0.25;"></path>
+                    <path d="M 200 0 C 300 150, 100 300, 400 450 L 800 600" stroke-width="1.4" style="opacity: 0.27;"></path>
+                    <path class="arrow" d="M 490 295 L 500 300 L 490 305 Z" transform="rotate(22, 500, 300)" style="opacity: 0.35;"></path>
+                    <path class="arrow" d="M 590 445 L 600 450 L 590 455 Z" transform="rotate(10, 600, 450)" style="opacity: 0.35;"></path>
+                    <path class="arrow" d="M 990 295 L 1000 300 L 990 305 Z" transform="rotate(10, 1000, 300)" style="opacity: 0.35;"></path>
+                    <path class="arrow" d="M 390 445 L 400 450 L 390 455 Z" transform="rotate(-15, 400, 450)" style="opacity: 0.33;"></path>
+                </svg>
+            </div>
+
+            <h2 class="section-title">Related Therapeutic Class Products</h2>
+            <div class="products-grid">
+                {% for similar in similar_products %}
+                    <div class="product-card">
+                        <a href="{% url 'product_detail' similar.pk %}" style="text-decoration: none; color: inherit;">
+                            <div style="width:100%;height:220px;display:flex;align-items:center;justify-content:center;overflow:hidden;">
+                                {% if similar.image %}
+                                    <img src="{{ similar.image.url }}" alt="{{ similar.name }}" class="product-card-image" style="width:100%;height:100%;object-fit:contain;">
+                                {% else %}
+                                    <img src="{% static 'images/default-product.png' %}" alt="No image" class="product-card-image" style="width:100%;height:100%;object-fit:contain;">
+                                {% endif %}
+                            </div>
+                            <div class="product-card-content">
+                                <h3 class="product-card-title">{{ similar.name }}</h3>
+                                <p class="product-card-desc">{{ similar.generic_name }}</p>
+                            </div>
+                        </a>
+                    </div>
+                {% empty %}
+                    <p style="text-align: center; color: #64748b; font-size: 1.1rem;">No similar products found.</p>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        // Image slider logic
+        const images = Array.from(document.querySelectorAll('.image-thumbnails .thumbnail'));
+        let currentIndex = images.findIndex(img => img.classList.contains('active'));
+        
+        function showImage(idx) {
+            if (images.length === 0) return;
+            images.forEach(img => img.classList.remove('active'));
+            images[idx].classList.add('active');
+            document.getElementById('mainProductImage').src = images[idx].src;
+            currentIndex = idx;
+        }
+        
+        if (images.length > 0) {
+            document.getElementById('prevImage')?.addEventListener('click', function() {
+                showImage((currentIndex - 1 + images.length) % images.length);
+            });
+            document.getElementById('nextImage')?.addEventListener('click', function() {
+                showImage((currentIndex + 1) % images.length);
+            });
+        }
+        
+        function changeImage(el) {
+            const idx = images.indexOf(el);
+            if (idx !== -1) showImage(idx);
+        }
+
+        // Enhanced expand/collapse functionality with toggle feature
+        function addExpandCollapseFunctionality(containerId, originalText) {
+            const container = document.getElementById(containerId);
+            if (!container || !originalText) return;
+            
+            // Temporarily set display to block to get accurate scrollHeight for initial check
+            container.style.display = 'block'; 
+            container.style.webkitLineClamp = 'unset';
+            container.style.overflow = 'visible';
+
+            const lineHeight = parseInt(window.getComputedStyle(container).lineHeight);
+            const maxHeight = lineHeight * 3;
+            
+            // Check if content overflows 3 lines
+            if (container.scrollHeight > maxHeight) {
+                // Store original content and create unique ID for this section
+                const originalContent = originalText; // Use originalText directly
+                const uniqueId = containerId + '_toggle';
+                
+                // Create truncated version
+                const truncatedContent = createTruncatedContent(container, originalText, uniqueId, true);
+                container.innerHTML = truncatedContent;
+                
+                // Apply line clamp styles for truncated state
+                applyTruncatedStyles(container);
+                
+                // Store data for toggle functionality
+                container.dataset.originalContent = originalContent;
+                container.dataset.truncatedContent = truncatedContent;
+                container.dataset.isExpanded = 'false';
+            } else {
+                // If content does not overflow, ensure it's fully visible and remove any toggle buttons
+                container.innerHTML = originalText;
+                applyExpandedStyles(container); // Ensure no line clamps are applied
+                container.dataset.isExpanded = 'true'; // Mark as expanded as it fits
+                delete container.dataset.originalContent;
+                delete container.dataset.truncatedContent;
+            }
+        }
+        
+        function createTruncatedContent(container, originalText, uniqueId, isExpanded) {
+            // Create a temporary element to measure text
+            const tempDiv = document.createElement('div');
+            tempDiv.style.cssText = `
+                position: absolute;
+                visibility: hidden;
+                width: ${container.offsetWidth}px;
+                font-size: ${window.getComputedStyle(container).fontSize};
+                font-family: ${window.getComputedStyle(container).fontFamily};
+                line-height: ${window.getComputedStyle(container).lineHeight};
+                word-wrap: break-word;
+                overflow-wrap: break-word;
+            `;
+            document.body.appendChild(tempDiv);
+            
+            const lineHeight = parseInt(window.getComputedStyle(container).lineHeight);
+            const maxHeight = lineHeight * 3;
+            
+            // Find the text that fits in 3 lines
+            const words = originalText.split(' ');
+            let truncatedText = '';
+            let i = 0;
+            
+            const buttonHtml = `<span class="expand-btn" onclick="toggleText('${container.id}')"><span class="expand-symbol">${isExpanded ? '+' : '−'}</span> ${isExpanded ? 'Expand' : 'Collapse'}</span>`;
+            
+            while (i < words.length) {
+                const testText = truncatedText + (truncatedText ? ' ' : '') + words[i];
+                tempDiv.innerHTML = testText + ' ' + buttonHtml;
+                
+                if (tempDiv.scrollHeight > maxHeight) {
+                    // Remove the last word and add button
+                    truncatedText = truncatedText.trim();
+                    break;
+                }
+                
+                truncatedText = testText;
+                i++;
+            }
+
+            // Clean up
+            document.body.removeChild(tempDiv);
+
+            return truncatedText + ' ' + buttonHtml;
+        }
+
+        function applyTruncatedStyles(container) {
+            container.style.display = '-webkit-box';
+            container.style.webkitLineClamp = '3';
+            container.style.webkitBoxOrient = 'vertical';
+            container.style.overflow = 'hidden';
+            container.style.textOverflow = 'ellipsis';
+        }
+
+        function applyExpandedStyles(container) {
+            container.style.display = 'block';
+            container.style.webkitLineClamp = 'unset';
+            container.style.overflow = 'visible';
+            container.style.textOverflow = 'unset';
+        }
+
+        // Function to toggle between expanded and collapsed states
+        function toggleText(containerId) {
+            const container = document.getElementById(containerId);
+            if (!container) return;
+
+            const isExpanded = container.dataset.isExpanded === 'true';
+
+            if (isExpanded) {
+                // Collapse: go back to truncated state
+                container.innerHTML = container.dataset.truncatedContent;
+                applyTruncatedStyles(container);
+                container.dataset.isExpanded = 'false';
+            } else {
+                // Expand: show full content with collapse button
+                const originalContent = container.dataset.originalContent;
+                const collapseButton = `<span class="expand-btn" onclick="toggleText('${containerId}')"><span class="expand-symbol">−</span> Collapse</span>`;
+                container.innerHTML = originalContent + ' ' + collapseButton;
+                applyExpandedStyles(container);
+                container.dataset.isExpanded = 'true';
+            }
+        }
+
+        // Apply expand/collapse functionality to all sections
+        document.addEventListener('DOMContentLoaded', function() {
+            setTimeout(() => {
+                addExpandCollapseFunctionality('productDescription', `{{ product.description|escapejs }}`);
+                addExpandCollapseFunctionality('packContent', `{{ product.pack_size|escapejs }}`);
+                addExpandCollapseFunctionality('compositionContent', `{{ product.composition|escapejs }}`);
+                addExpandCollapseFunctionality('indicationContent', `{{ product.indication|escapejs }}`);
+                addExpandCollapseFunctionality('dosageContent', `{{ product.dosage|escapejs }}`);
+            }, 100); // Small delay to ensure elements are rendered and measured
+        });
+
+        // Reapply on window resize
+        window.addEventListener('resize', function() {
+            // Re-evaluate and re-apply expand/collapse for all sections on resize
+            setTimeout(() => {
+                addExpandCollapseFunctionality('productDescription', `{{ product.description|escapejs }}`);
+                addExpandCollapseFunctionality('packContent', `{{ product.pack_size|escapejs }}`);
+                addExpandCollapseFunctionality('compositionContent', `{{ product.composition|escapejs }}`);
+                addExpandCollapseFunctionality('indicationContent', `{{ product.indication|escapejs }}`);
+                addExpandCollapseFunctionality('dosageContent', `{{ product.dosage|escapejs }}`);
+            }, 100);
+        });
+    </script>
+{% endblock %}

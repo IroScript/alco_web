@@ -1,0 +1,466 @@
+{% extends "base.html" %}
+{% block content %}
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ product.name }} Details</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #232a34 0%, #2c3e50 100%);
+            color: #e0e6ed;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 30px 20px;
+        }
+        .sliding-banner {
+            background: linear-gradient(135deg, #263142 0%, #232a34 100%);
+            color: #e0e6ed;
+            padding: 15px;
+            margin: 30px 0;
+            border-radius: 10px;
+            overflow: hidden;
+            position: relative;
+            box-shadow: 0 0 24px 6px #3498db33;
+        }
+        .sliding-text {
+            animation: slide 15s linear infinite;
+            white-space: nowrap;
+        }
+        @keyframes slide {
+            0% { transform: translateX(100%); }
+            100% { transform: translateX(-100%); }
+        }
+        .product-main {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 40px;
+            margin-bottom: 50px;
+            background: #232a34;
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 8px 32px 0 #3498db33;
+        }
+        .product-images {
+            position: relative;
+        }
+        .main-image {
+            width: 100%;
+            height: 400px;
+            border-radius: 10px;
+            object-fit: cover;
+            border: 2px solid #34495e;
+            transition: transform 0.3s ease;
+            background: #1a2230;
+            box-shadow: 0 0 24px 6px #3498db33;
+        }
+        .main-image:hover {
+            transform: scale(1.05);
+        }
+        .image-thumbnails {
+            display: flex;
+            gap: 10px;
+            margin-top: 15px;
+            overflow-x: auto;
+            padding: 5px 0;
+        }
+        .thumbnail {
+            width: 80px;
+            height: 80px;
+            border-radius: 8px;
+            object-fit: cover;
+            cursor: pointer;
+            border: 2px solid #34495e;
+            background: #263142;
+            transition: all 0.3s ease;
+            flex-shrink: 0;
+        }
+        .thumbnail:hover,
+        .thumbnail.active {
+            border-color: #3498db;
+            box-shadow: 0 0 12px #3498db55;
+            transform: translateY(-2px);
+        }
+        .product-info {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+        .product-title {
+            font-size: 2.2rem;
+            font-weight: bold;
+            color: #7fd0ff;
+            margin-bottom: 10px;
+        }
+        .product-subtitle {
+            font-size: 1.1rem;
+            color: #b0c4de;
+            margin-bottom: 20px;
+            line-height: 1.6;
+        }
+        .description-container {
+            position: relative;
+        }
+        .description-text {
+            display: -webkit-box;
+            -webkit-line-clamp: 3;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            line-height: 1.6;
+        }
+        .description-text.expanded {
+            -webkit-line-clamp: unset;
+            overflow: visible;
+        }
+        .see-more-btn {
+            background: none;
+            border: none;
+            color: #7fd0ff;
+            cursor: pointer;
+            font-weight: bold;
+            padding: 0;
+            margin-left: 5px;
+            font-size: inherit;
+            text-decoration: underline;
+        }
+        .see-more-btn:hover {
+            color: #3498db;
+        }
+        .info-section {
+            background: #263142;
+            padding: 20px;
+            border-radius: 10px;
+            border-left: 4px solid #3498db;
+            color: #e0e6ed;
+        }
+        .info-title {
+            font-weight: bold;
+            color: #7fd0ff;
+            margin-bottom: 10px;
+            font-size: 1.1rem;
+        }
+        .info-content {
+            line-height: 1.6;
+            color: #e0e6ed;
+        }
+        .prescribing-info {
+            background: linear-gradient(135deg, #263142 0%, #232a34 100%);
+            padding: 20px;
+            border-radius: 10px;
+            text-align: center;
+            margin-top: 20px;
+            color: #e0e6ed;
+            box-shadow: 0 0 16px #3498db33;
+        }
+        .pdf-btn {
+            background: linear-gradient(135deg, #3498db 0%, #2a5298 100%);
+            color: #fff;
+            padding: 12px 30px;
+            border: none;
+            border-radius: 25px;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-block;
+            box-shadow: 0 4px 15px #3498db55;
+        }
+        .pdf-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px #3498db88;
+            background: #217dbb;
+        }
+        .related-products {
+            margin-top: 50px;
+        }
+        .section-title {
+            font-size: 1.8rem;
+            color: #7fd0ff;
+            margin-bottom: 30px;
+            text-align: center;
+            position: relative;
+        }
+        .section-title::after {
+            content: '';
+            position: absolute;
+            bottom: -10px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 80px;
+            height: 3px;
+            background: linear-gradient(135deg, #3498db 0%, #7fd0ff 100%);
+            border-radius: 2px;
+        }
+        .products-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 25px;
+        }
+        .product-card {
+            background: #232a34;
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 8px 30px 0 #3498db88, 0 8px 30px 0 #2a529888;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+        .product-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 40px #3498dbcc;
+        }
+        .product-card-image {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+            background: #263142;
+            transition: transform 0.3s ease;
+        }
+        .product-card:hover .product-card-image {
+            transform: scale(1.1);
+        }
+        .product-card-content {
+            padding: 20px;
+        }
+        .product-card-title {
+            font-size: 1.2rem;
+            font-weight: bold;
+            color: #7fd0ff;
+            margin-bottom: 8px;
+        }
+        .product-card-desc {
+            color: #b0c4de;
+            font-size: 0.9rem;
+            line-height: 1.5;
+        }
+        .fade-in {
+            animation: fadeIn 0.8s ease-in;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        @media (max-width: 768px) {
+            .product-main {
+                grid-template-columns: 1fr;
+                gap: 20px;
+            }
+            .product-title {
+                font-size: 1.8rem;
+            }
+            .products-grid {
+                grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            }
+        }
+        /* Add zoom effect for main image */
+        .main-image.zoomable {
+            transition: transform 0.3s ease;
+            cursor: zoom-in;
+        }
+        .main-image.zoomable:hover {
+            transform: scale(1.2);
+            z-index: 2;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="sliding-banner">
+            <div class="sliding-text">
+                {{ banner_text|default:"" }}
+            </div>
+        </div>
+        <div class="product-main fade-in">
+            <div class="product-images">
+                <div class="slider-wrapper" style="position:relative;">
+                    {% if product.image %}
+                        <img class="main-image zoomable" id="mainProductImage" src="{{ product.image.url }}" alt="{{ product.name }}">
+                    {% elif images %}
+                        <img class="main-image zoomable" id="mainProductImage" src="{{ images.0.image.url }}" alt="{{ product.name }}">
+                    {% else %}
+                        <img class="main-image zoomable" id="mainProductImage" src="{% static 'images/default-product.png' %}" alt="No image">
+                    {% endif %}
+                    {% if images %}
+                        <button id="prevImage" style="position:absolute;left:0;top:50%;transform:translateY(-50%);">&#8592;</button>
+                        <button id="nextImage" style="position:absolute;right:0;top:50%;transform:translateY(-50%);">&#8594;</button>
+                    {% endif %}
+                </div>
+                <div class="image-thumbnails">
+                    {% if product.image %}
+                        <img src="{{ product.image.url }}" alt="Main image" class="thumbnail active" onclick="changeImage(this)">
+                    {% endif %}
+                    {% for img in images %}
+                        <img src="{{ img.image.url }}" alt="Product image" class="thumbnail" onclick="changeImage(this)">
+                    {% endfor %}
+                </div>
+            </div>
+            <div class="product-info">
+                <h1 class="product-title">{{ product.name }}{% if product.generic_name %} <span style="font-size:1.1rem;color:#b0c4de;font-weight:normal;">({{ product.generic_name }})</span>{% endif %}</h1>
+                <div class="product-subtitle">
+                    <div class="description-container">
+                        <div class="description-text" id="productDescription">{{ product.description|safe }}</div>
+                        <button class="see-more-btn" id="seeMoreBtn" style="display: none;">See more</button>
+                    </div>
+                </div>
+                <div class="info-section">
+                    <div class="info-title">Composition</div>
+                    <div class="info-content">{{ product.composition }}</div>
+                </div>
+                <div class="info-section">
+                    <div class="info-title">Indication</div>
+                    <div class="info-content">{{ product.indication }}</div>
+                </div>
+                <div class="info-section">
+                    <div class="info-title">Dosage</div>
+                    <div class="info-content">{{ product.dosage }}</div>
+                </div>
+                <div class="info-section">
+                    <div class="info-title">Pack Size</div>
+                    <div class="info-content">{{ product.pack_size }}</div>
+                </div>
+                <div class="prescribing-info">
+                    <p style="margin-bottom: 15px; font-weight: bold;">Complete Prescribing Information</p>
+                    {% if product.pdf %}
+                        <a href="{{ product.pdf.url }}" class="pdf-btn" target="_blank">📄 View PDF</a>
+                    {% else %}
+                        <span style="color:#888;">No PDF uploaded.</span>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+        <div class="related-products">
+            <h2 class="section-title">Related Therapeutic Class Products</h2>
+            <div class="products-grid">
+                {% for similar in similar_products %}
+                    <div class="product-card">
+                        <a href="{% url 'product_detail' similar.pk %}">
+                            <div style="width:100%;height:200px;display:flex;align-items:center;justify-content:center;overflow:hidden;background:#263142;">
+                                {% if similar.image %}
+                                    <img src="{{ similar.image.url }}" alt="{{ similar.name }}" class="product-card-image" style="width:100%;height:100%;object-fit:contain;">
+                                {% else %}
+                                    <img src="{% static 'images/default-product.png' %}" alt="No image" class="product-card-image" style="width:100%;height:100%;object-fit:contain;">
+                                {% endif %}
+                            </div>
+                            <div class="product-card-content">
+                                <h3 class="product-card-title">{{ similar.name }}</h3>
+                                <p class="product-card-desc">{{ similar.generic_name }}</p>
+                            </div>
+                        </a>
+                    </div>
+                {% empty %}
+                    <p>No similar products found.</p>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+    <script>
+        // Image slider logic
+        const images = Array.from(document.querySelectorAll('.image-thumbnails .thumbnail'));
+        let currentIndex = images.findIndex(img => img.classList.contains('active'));
+        function showImage(idx) {
+            if (images.length === 0) return;
+            images.forEach(img => img.classList.remove('active'));
+            images[idx].classList.add('active');
+            document.getElementById('mainProductImage').src = images[idx].src;
+            currentIndex = idx;
+        }
+        if (images.length > 0) {
+            document.getElementById('prevImage')?.addEventListener('click', function() {
+                showImage((currentIndex - 1 + images.length) % images.length);
+            });
+            document.getElementById('nextImage')?.addEventListener('click', function() {
+                showImage((currentIndex + 1) % images.length);
+            });
+        }
+        function changeImage(el) {
+            const idx = images.indexOf(el);
+            if (idx !== -1) showImage(idx);
+        }
+
+        // Enhanced "See more" functionality
+        document.addEventListener('DOMContentLoaded', function() {
+            const descriptionText = document.getElementById('productDescription');
+            const seeMoreBtn = document.getElementById('seeMoreBtn');
+            
+            if (descriptionText && seeMoreBtn) {
+                // Check if text is overflowing (more than 3 lines)
+                function checkOverflow() {
+                    const lineHeight = parseInt(window.getComputedStyle(descriptionText).lineHeight);
+                    const maxHeight = lineHeight * 3; // 3 lines
+                    
+                    if (descriptionText.scrollHeight > maxHeight) {
+                        // Text is overflowing, show the "See more" button
+                        seeMoreBtn.style.display = 'inline';
+                        
+                        // Position the button at the end of the truncated text
+                        const tempDiv = document.createElement('div');
+                        tempDiv.innerHTML = descriptionText.innerHTML;
+                        tempDiv.style.position = 'absolute';
+                        tempDiv.style.visibility = 'hidden';
+                        tempDiv.style.width = descriptionText.offsetWidth + 'px';
+                        tempDiv.style.fontSize = window.getComputedStyle(descriptionText).fontSize;
+                        tempDiv.style.fontFamily = window.getComputedStyle(descriptionText).fontFamily;
+                        tempDiv.style.lineHeight = window.getComputedStyle(descriptionText).lineHeight;
+                        document.body.appendChild(tempDiv);
+                        
+                        // Add the see more button to the end
+                        descriptionText.innerHTML = descriptionText.innerHTML.trim();
+                        if (!descriptionText.innerHTML.endsWith('...')) {
+                            // Add ellipsis if not present
+                            const words = descriptionText.innerHTML.split(' ');
+                            let truncatedText = '';
+                            tempDiv.innerHTML = '';
+                            
+                            for (let i = 0; i < words.length; i++) {
+                                const testText = truncatedText + words[i] + ' ';
+                                tempDiv.innerHTML = testText + '...';
+                                
+                                if (tempDiv.scrollHeight > maxHeight) {
+                                    truncatedText = truncatedText.trim();
+                                    break;
+                                }
+                                truncatedText = testText;
+                            }
+                            
+                            descriptionText.innerHTML = truncatedText + '...';
+                        }
+                        
+                        document.body.removeChild(tempDiv);
+                        
+                        // Add the see more button after the description
+                        const seeMoreSpan = document.createElement('span');
+                        seeMoreSpan.appendChild(seeMoreBtn);
+                        descriptionText.parentNode.appendChild(seeMoreSpan);
+                        
+                        // Store original text
+                        const originalText = '{{ product.description|safe }}';
+                        
+                        seeMoreBtn.addEventListener('click', function() {
+                            descriptionText.innerHTML = originalText;
+                            descriptionText.classList.add('expanded');
+                            seeMoreBtn.style.display = 'none';
+                        });
+                    }
+                }
+                
+                // Check overflow after page loads
+                setTimeout(checkOverflow, 100);
+                
+                // Check on window resize
+                window.addEventListener('resize', checkOverflow);
+            }
+        });
+    </script>
+</body>
+</html>
+{% endblock %}

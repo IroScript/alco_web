@@ -1,0 +1,50 @@
+{% load static %}
+{% comment %}Partial for products grid and pagination, used in AJAX responses{% endcomment %}
+<div class="products-grid" id="productsContainer">
+    {% for product in products %}
+        <div class="product-card">
+            <a href="{% url 'product_detail' product.pk %}">
+                <div class="product-image">
+                    {% if product.image %}
+                        <img src="{{ product.image.url }}" alt="{{ product.name }}">
+                    {% else %}
+                        <img src="{% static 'images/default-product.png' %}" alt="No image">
+                    {% endif %}
+                </div>
+                <div class="product-name" style="font-size: 1.15rem; font-weight: 700; color: #fff; text-shadow: 0 0 10px #3498db, 0 0 18px #2c3e50; letter-spacing: 1px; padding: 2px 10px; border-radius: 8px; background: rgba(52,152,219,0.18);">{{ product.name }}</div>
+                {% if product.generic_name %}
+                <div style="font-size: 1rem; color: #b0c4de; font-style: italic; background: rgba(44,62,80,0.7); padding: 1px 8px; border-radius: 6px; margin-top: -2px;">{{ product.generic_name }}</div>
+                {% endif %}
+                {% if product.therapeutic_class %}
+                <div style="font-size: 0.95rem; color: #ffe082; background: rgba(52,152,219,0.13); padding: 1px 8px; border-radius: 6px; margin-top: -2px;">{{ product.therapeutic_class.name }}</div>
+                {% endif %}
+                <div style="font-size: 0.93rem; color: #fff; background: rgba(52,152,219,0.10); padding: 1px 8px; border-radius: 6px; margin-top: 4px;">Pack Size: {{ product.pack_size }}</div>
+            </a>
+        </div>
+    {% empty %}
+        <p>No products available.</p>
+    {% endfor %}
+</div>
+
+<!-- Pagination Controls -->
+{% if page_obj.has_other_pages %}
+<div style="display: flex; justify-content: center; margin: 40px 0 0 0;">
+    <nav aria-label="Page navigation">
+        <ul style="display: flex; list-style: none; gap: 8px; padding: 0;">
+            {% if page_obj.has_previous %}
+                <li><a href="?{% if request.GET.letter %}letter={{ request.GET.letter }}&{% endif %}{% if request.GET.search %}search={{ request.GET.search }}&{% endif %}page={{ page_obj.previous_page_number }}" style="padding: 8px 14px; border-radius: 6px; background: #e0e0e0; color: #2a5298; text-decoration: none;">&laquo; Prev</a></li>
+            {% endif %}
+            {% for num in paginator.page_range %}
+                {% if page_obj.number == num %}
+                    <li><span style="padding: 8px 14px; border-radius: 6px; background: #2a5298; color: white; font-weight: bold;">{{ num }}</span></li>
+                {% elif num > page_obj.number|add:'-5' and num < page_obj.number|add:'5' %}
+                    <li><a href="?{% if request.GET.letter %}letter={{ request.GET.letter }}&{% endif %}{% if request.GET.search %}search={{ request.GET.search }}&{% endif %}page={{ num }}" style="padding: 8px 14px; border-radius: 6px; background: #e0e0e0; color: #2a5298; text-decoration: none;">{{ num }}</a></li>
+                {% endif %}
+            {% endfor %}
+            {% if page_obj.has_next %}
+                <li><a href="?{% if request.GET.letter %}letter={{ request.GET.letter }}&{% endif %}{% if request.GET.search %}search={{ request.GET.search }}&{% endif %}page={{ page_obj.next_page_number }}" style="padding: 8px 14px; border-radius: 6px; background: #e0e0e0; color: #2a5298; text-decoration: none;">Next &raquo;</a></li>
+            {% endif %}
+        </ul>
+    </nav>
+</div>
+{% endif %} 

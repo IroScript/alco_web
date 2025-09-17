@@ -1,0 +1,1506 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Alco Pharma Ltd. | Innovative Pharmaceutical Solutions</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #2c3e50 0%, #34495e 100%);
+            color: white;
+            overflow-x: hidden;
+        }
+
+        .navbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1.275rem 2rem;
+            background: rgba(0, 0, 0, 0.2);
+            backdrop-filter: blur(10px);
+            position: sticky;
+            top: 0;
+            width: 100%;
+            z-index: 2000;
+            transition: padding 0s, height 0s;
+        }
+        .navbar.shrink {
+            padding: 0.255rem 2rem;
+        }
+        .logo {
+            font-size: 1.2rem;
+            font-weight: bold;
+            color: #3498db;
+            transition: font-size 0s, transform 0.2s;
+            transform: scale(1.3);
+        }
+        .navbar.shrink .logo {
+            font-size: 1.2rem;
+            transform: scale(0.75);
+        }
+
+        .logo {
+            font-size: 1.2rem;
+            font-weight: bold;
+            color: #3498db;
+        }
+
+        .nav-links {
+            display: flex;
+            list-style: none;
+            gap: 2rem;
+            position: relative;
+        }
+
+        .nav-links .dropdown {
+            position: relative;
+        }
+        .nav-links .dropdown-toggle::after {
+            content: " ▼";
+            font-size: 0.7em;
+        }
+        .dropdown-menu {
+            display: none;
+            position: absolute;
+            top: 2.5rem;
+            left: 0;
+            background: #475e7a;
+            box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.25);
+            border-radius: 12px;
+            min-width: 220px;
+            z-index: 3000;
+            flex-direction: column;
+            padding: 0.7rem 0;
+            border: 1.5px solid #3498db44;
+        }
+        .dropdown-menu li {
+            width: 100%;
+        }
+        .dropdown-menu a {
+            display: block;
+            padding: 0.7rem 1.5rem;
+            color: #1a2230;
+            text-decoration: none;
+            transition: background 0.2s, color 0.2s;
+            font-size: 1rem;
+            border-radius: 6px;
+            font-weight: 500;
+        }
+        .dropdown-menu a:hover {
+            background: #4eb7fd;
+            color: #ffffff !important;
+        }
+        .nav-links .dropdown:hover > .dropdown-menu,
+        .nav-links .dropdown:focus-within > .dropdown-menu {
+            display: flex;
+        }
+
+        .dropdown-menu {
+            pointer-events: auto;
+        }
+
+        .nav-links a {
+            color: white;
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+
+        .nav-links a:hover {
+            color: #3498db;
+        }
+
+        .user-profile {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .profile-img {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: #3498db;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+        }
+
+        .main-container {
+            display: flex;
+            min-height: 90vh;
+            position: relative;
+        }
+
+        .left-section {
+            flex: 1;
+            padding: 3rem 2rem;
+            display: flex;
+            flex-direction: row;
+            align-items: flex-start;
+            justify-content: flex-start;
+        }
+
+        .recipe-badge {
+            writing-mode: vertical-lr;
+            text-orientation: mixed;
+            font-size: 1.1rem;
+            color: #bdc3c7;
+            letter-spacing: 2px;
+            margin: 0 2.5rem 0 0;
+            min-width: 30px;
+            height: 100%;
+            display: flex;
+            align-items: flex-start;
+            justify-content: center;
+            font-weight: bold;
+        }
+
+        .recipe-title {
+            font-size: 3rem;
+            font-weight: bold;
+            margin-bottom: 1rem;
+            line-height: 1.2;
+        }
+
+        .rating {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .stars {
+            color: #f39c12;
+        }
+
+        .recipe-description {
+            color: #bdc3c7;
+            line-height: 1.6;
+            margin-bottom: 2rem;
+            max-width: 400px;
+        }
+
+        .user-info {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+
+        .user-avatars {
+            display: flex;
+            gap: 0.5rem;
+        }
+
+        .avatar {
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            background: #3498db;
+            border: 2px solid white;
+        }
+
+        .user-stats {
+            color: #bdc3c7;
+            font-size: 0.9rem;
+        }
+
+        .cook-button {
+            background: #3498db;
+            color: white;
+            padding: 1rem 2rem;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 1rem;
+            font-weight: bold;
+            transition: background 0.3s;
+            width: fit-content;
+        }
+
+        .cook-button:hover {
+            background: #2980b9;
+        }
+
+        .right-section {
+            flex: 1;
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 500px;
+        }
+
+        /* Cloudy/blurred circle styles */
+        .circle-container {
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: flex-end;
+            width: 100%;
+            min-height: 600px;
+            overflow: visible;
+        }
+        .slider-button {
+            position: absolute;
+            right: 10px;
+            top: 50%;
+            transform: translateY(-50%);
+            z-index: 10;
+            background: linear-gradient(135deg, #fff 60%, #e6f3ff 100%);
+            border: 3px solid #3498db;
+            border-radius: 50%;
+            width: 56px;
+            height: 56px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2.3rem;
+            color: #3498db;
+            cursor: pointer;
+            box-shadow: 0 0 0 6px #3498db33, 0 4px 24px 0 #3498db44;
+            transition: background 0.2s, transform 0.2s, box-shadow 0.2s;
+            outline: none;
+        }
+        
+        .slider-button:hover {
+            background: linear-gradient(135deg, #e6f3ff 60%, #fff 100%);
+            transform: translateY(-50%) scale(1.13);
+            box-shadow: 0 0 0 10px #3498db55, 0 8px 32px 0 #3498db66;
+        }
+        .cloudy-glow {
+            position: absolute;
+            width: 700px;
+            height: 700px;
+            right: -140px;
+            top: 50%;
+            transform: translateY(-50%);
+            border-radius: 50%;
+            background: radial-gradient(ellipse at 50% 80%, #7fd0ffcc 0%, #b6e0ff99 30%, #ff4b6ecc 60%, #7fd0ff22 80%, #232a3400 100%);
+            box-shadow:
+                0 180px 180px 40px #7fd0ffcc,
+                0 260px 220px 80px #ff4b6ecc,
+                0 320px 260px 120px #7fd0ff55;
+            filter: blur(40px) brightness(1.25);
+            z-index: 1;
+            pointer-events: none;
+        }
+        .food-circle {
+            position: relative;
+            width: 600px;
+            height: 600px;
+            border-radius: 50%;
+            overflow: hidden;
+            box-shadow: 0 12px 60px 0 #1a2230cc, 0 0 0 18px #7fd0ff22, 0 0 80px 20px #7fd0ff33;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: #222c37;
+            transition: transform 0.35s cubic-bezier(.4,2,.6,1), box-shadow 0.35s;
+            z-index: 2;
+        }
+        .food-circle:hover {
+            transform: scale(1.13);
+            box-shadow: 0 24px 80px 0 #1a2230ee, 0 0 0 28px #ffffff33;
+        }
+        .food-bg {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            object-position: left center;
+            display: block;
+        }
+        .circle-text {
+            position: absolute;
+            top: 90%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            color: #f3f6fa;
+            font-family: 'Segoe UI', 'Montserrat', 'Helvetica Neue', Arial, sans-serif;
+            font-size: 1.6rem;
+            font-weight: 600;
+            letter-spacing: 0.04em;
+            text-align: center;
+            text-shadow: 
+                2.4px 2.4px 4.8px rgba(0, 0, 0, 0.8),
+                0 0 3px #7fd0ff,
+                0 0 6px #7fd0ff,
+                0 0 9px #7fd0ff,
+                0 4.8px 38.4px #232a34cc;
+            pointer-events: none;
+            transition: color 0.4s cubic-bezier(.4,2,.6,1), text-shadow 0.4s cubic-bezier(.4,2,.6,1);
+            z-index: 3;
+            padding: 0.5em 1.2em;
+            border-radius: 1.5em;
+            overflow: visible;
+        }
+        .circle-text::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 63%;
+            height: 80.5%;
+            background: rgba(30, 36, 50, 0.66);
+            border-radius: 2em;
+            filter: blur(8px);
+            z-index: -1;
+            box-shadow: 0 4px 32px 0 rgba(31, 38, 135, 0.10);
+        }
+        .food-circle:hover .circle-text {
+            color: #fff;
+            text-shadow: 
+                3.6px 3.6px 7.2px rgba(0, 0, 0, 0.9),
+                0 0 4.5px #7fd0ff,
+                0 0 9px #7fd0ff,
+                0 0 13.5px #7fd0ff,
+                0 9.6px 76.8px #7fd0ffcc,
+                0 4.8px 38.4px #232a34cc;
+        }
+        @media (max-width: 500px) {
+            .food-circle, .cloudy-glow {
+                width: 90vw !important;
+                height: 90vw !important;
+                min-width: 0;
+                min-height: 0;
+                max-width: 98vw;
+                max-height: 98vw;
+            }
+            .circle-text {
+                font-size: 1.7rem !important;
+            }
+        }
+
+        .floating-icons {
+            position: absolute;
+            top: 50%;
+            right: 100px;
+            transform: translateY(-50%);
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        .icon {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .icon:hover {
+            background: rgba(255, 255, 255, 0.2);
+            transform: scale(1.1);
+        }
+
+        /* Remove old absolute positioning for bottom-recipes */
+        .bottom-recipes {
+            position: fixed;
+            left: 3vw;
+            bottom: 6.5rem;
+            min-width: 60vw;
+            max-width: 80vw;
+            display: flex;
+            justify-content: flex-start;
+            gap: 2rem;
+            background: rgba(30, 36, 50, 0.85);
+            box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.25);
+            border-radius: 20px;
+            padding: 1.5rem 2.5rem;
+            z-index: 100;
+            backdrop-filter: blur(8px);
+            opacity: 1;
+            transition: opacity 0.7s;
+        }
+        .bottom-recipes.faded {
+            opacity: 0.1;
+        }
+        .bottom-recipes:hover, .bottom-recipes:focus-within {
+            opacity: 1 !important;
+        }
+        @media (max-width: 900px) {
+            .bottom-recipes {
+                left: 0;
+                right: 0;
+                min-width: unset;
+                max-width: 98vw;
+                margin: 0 auto;
+                flex-direction: column;
+                align-items: center;
+                gap: 1rem;
+                padding: 1rem 0;
+                bottom: 7rem;
+            }
+        }
+
+                .site-footer {
+            width: 100%;
+            background: linear-gradient(135deg, #264653, #2a9d8f);
+            color: #bdc3c7;
+            padding: 2rem 0 1rem 0;
+            text-align: center;
+            position: relative;
+            z-index: 10;
+            border-top: 3px solid #2a9d8f;
+            box-shadow: 0 -5px 15px -5px rgba(0,0,0,0.5);
+        }
+        .footer-content {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 1rem;
+        }
+        .footer-section {
+            font-size: 1rem;
+        }
+        @media (max-width: 768px) {
+            .footer-content {
+                font-size: 0.9rem;
+            }
+        }
+
+        .recipe-card {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            background: rgba(0, 0, 0, 0.3);
+            padding: 1rem;
+            border-radius: 10px;
+            backdrop-filter: blur(10px);
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .recipe-card:hover {
+            transform: translateY(-5px);
+            background: rgba(0, 0, 0, 0.5);
+        }
+
+        .recipe-card-img {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            object-fit: cover;
+        }
+
+        .recipe-card-info h4 {
+            margin-bottom: 0.5rem;
+        }
+
+        .recipe-card-info p {
+            color: #bdc3c7;
+            font-size: 0.9rem;
+        }
+
+        .video-popup {
+            position: fixed;
+            right: 0;
+            bottom: 2.5rem;
+            width: 220px;
+            max-width: 50vw;
+            min-width: 160px;
+            background: #3498db;
+            color: white;
+            padding: 0.4rem 1rem 0.4rem 0.9rem;
+            border-radius: 16px 0 0 16px;
+            cursor: pointer;
+            z-index: 1000;
+            transition: all 0.3s, opacity 0.7s;
+            box-shadow: 0 2px 12px 0 rgba(31, 38, 135, 0.13);
+            opacity: 1;
+            pointer-events: auto;
+            display: flex;
+            align-items: center;
+            justify-content: flex-start;
+            min-height: 38px;
+            height: 38px;
+            font-size: 1rem;
+        }
+
+        .video-popup.hide {
+            opacity: 0;
+            pointer-events: none;
+        }
+
+        .video-popup:hover {
+            background: #2980b9;
+            transform: scale(1.05);
+        }
+
+        .play-button {
+            display: inline-block;
+            margin-right: 0.5rem;
+            font-size: 1.5rem;
+        }
+
+        @media (max-width: 768px) {
+            .main-container {
+                flex-direction: column;
+            }
+            .recipe-title {
+                font-size: 2rem;
+            }
+            .circular-frame {
+                width: 300px;
+                height: 300px;
+            }
+            .bottom-recipes {
+                position: static;
+                padding: 2rem;
+                justify-content: center;
+            }
+            .video-popup {
+                right: 1rem;
+                bottom: 1rem;
+                padding: 0.8rem;
+                font-size: 0.95rem;
+            }
+        }
+        .logo-glow {
+            display: flex;
+            align-items: center;
+            padding: 0.2em 1.1em 0.2em 0.7em;
+            border-radius: 2em;
+            background: rgba(255, 255, 255, 0.85);
+            box-shadow: 0 0 24px 6px rgba(127, 208, 255, 0.15), 0 0 48px 12px rgba(182, 224, 255, 0.15);
+            backdrop-filter: blur(4px);
+            font-weight: bold;
+            font-size: 1.2rem;
+            color: #232a34;
+        }
+        .logo-glow img {
+            background: transparent;
+            border-radius: 50%;
+            box-shadow: 0 0 24px 6px rgba(127, 208, 255, 0.15), 0 0 48px 12px rgba(182, 224, 255, 0.15);
+        }
+
+        /* Responsive video embed container */
+        .video-embed-container {
+            position: relative;
+            width: 100%;
+            max-width: 600px;
+            margin: 1.5rem 0;
+            padding-bottom: 56.25%; /* 16:9 aspect ratio */
+            height: 0;
+            overflow: hidden;
+            border-radius: 16px;
+            box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.18);
+            background: #222c37;
+        }
+        .video-embed-container iframe,
+        .video-embed-container embed,
+        .video-embed-container object {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            border: none;
+        }
+
+        /* Video Modal Styles */
+        .video-modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 10000;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .video-modal.active {
+            display: flex;
+            opacity: 1;
+        }
+
+        .video-modal-content {
+            position: relative;
+            width: 90%;
+            max-width: 800px;
+            max-height: 80vh;
+            background: #1a2230;
+            border-radius: 20px;
+            overflow: hidden;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+            transform: scale(0.7);
+            transition: transform 0.3s ease;
+        }
+
+        .video-modal.active .video-modal-content {
+            transform: scale(1);
+        }
+
+        .video-modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem 1.5rem;
+            background: linear-gradient(135deg, #3498db, #2980b9);
+            color: white;
+        }
+
+        .video-modal-title {
+            font-size: 1.2rem;
+            font-weight: 600;
+        }
+
+        .video-modal-close {
+            background: none;
+            border: none;
+            color: white;
+            font-size: 1.5rem;
+            cursor: pointer;
+            padding: 0.5rem;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: background 0.2s;
+        }
+
+        .video-modal-close:hover {
+            background: rgba(255, 255, 255, 0.2);
+        }
+
+        .video-modal-body {
+            position: relative;
+            width: 100%;
+            height: 0;
+            padding-bottom: 56.25%; /* 16:9 aspect ratio */
+        }
+
+        .video-modal-iframe {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            border: none;
+        }
+        
+        /* Error message for video loading issues */
+        .video-error {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            text-align: center;
+            color: #bdc3c7;
+            padding: 2rem;
+        }
+        
+        .video-error h3 {
+            margin-bottom: 1rem;
+            color: #e74c3c;
+        }
+        
+        .video-error p {
+            margin-bottom: 1rem;
+        }
+        
+        .video-error a {
+            color: #3498db;
+            text-decoration: none;
+        }
+        
+        .video-error a:hover {
+            text-decoration: underline;
+        }
+
+        @media (max-width: 768px) {
+            .video-modal-content {
+                width: 95%;
+                max-height: 70vh;
+            }
+            
+            .video-modal-header {
+                padding: 0.8rem 1rem;
+            }
+            
+            .video-modal-title {
+                font-size: 1rem;
+            }
+        }
+    </style>
+    <style>
+    /* Center the bottom-recipes and fit to content */
+    .bottom-recipes {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        gap: 2rem;
+        width: auto;
+        max-width: 900px;
+        margin: 48px auto 24px auto;
+        position: relative;
+        background: linear-gradient(135deg, #232a34 0%, #2a9d8f 100%);
+        border-radius: 22px;
+        box-shadow: 0 8px 32px 0 rgba(42,157,143,0.13);
+        padding: 1.5rem 2.5rem;
+        z-index: 100;
+        backdrop-filter: blur(8px);
+        opacity: 1;
+        transition: opacity 0.7s;
+    }
+    .recipe-card {
+        min-width: 200px;
+        max-width: 260px;
+        flex: 1 1 0;
+        margin: 0;
+    }
+    @media (max-width: 900px) {
+        .bottom-recipes {
+            flex-direction: column;
+            gap: 1rem;
+            max-width: 98vw;
+            padding: 1rem 0.5rem;
+        }
+        .recipe-card {
+            min-width: 0;
+            max-width: 98vw;
+        }
+    }
+    </style>
+</head>
+<body>
+    <!-- Animated green gradient background layer -->
+    <div class="alco-animated-bg"></div>
+    <!-- SVG lines background layer -->
+    <div class="alco-svg-bg">
+        <svg width="100%" height="100%" viewBox="0 0 1000 600" preserveAspectRatio="xMidYMid slice">
+            <path class="alco-bg-line" d="M 0 300 Q 250 200, 500 300 T 1000 300" stroke-width="2" style="opacity: 0.3;"></path>
+            <path class="alco-bg-line" d="M 0 200 Q 333 100, 666 200 T 1000 200" stroke-width="1.5" style="opacity: 0.25;"></path>
+            <path class="alco-bg-line" d="M 0 400 Q 200 500, 400 400 T 800 400 Q 900 350, 1000 400" stroke-width="1.8" style="opacity: 0.35;"></path>
+            <path class="alco-bg-line" d="M 200 0 Q 250 150, 200 300 T 200 600" stroke-width="1.2" style="opacity: 0.2;"></path>
+            <path class="alco-bg-line" d="M 800 0 Q 750 200, 800 400 T 800 600" stroke-width="1.5" style="opacity: 0.3;"></path>
+            <path class="alco-bg-line" d="M 0 100 C 300 50, 700 150, 1000 100" stroke-width="1" style="opacity: 0.2;"></path>
+            <path class="alco-bg-line" d="M 0 500 C 400 450, 600 550, 1000 500" stroke-width="1.3" style="opacity: 0.28;"></path>
+            <path class="alco-bg-arrow" d="M 490 295 L 510 300 L 490 305 Z" style="opacity: 0.4;"></path>
+            <path class="alco-bg-arrow" d="M 190 295 L 210 300 L 190 305 Z" style="opacity: 0.3;"></path>
+            <path class="alco-bg-arrow" d="M 790 395 L 810 400 L 790 405 Z" style="opacity: 0.35;"></path>
+            <circle cx="500" cy="300" r="3" fill="rgba(42,157,143,0.4)" style="animation: alco-pulse 4s ease-in-out infinite;"></circle>
+            <circle cx="200" cy="200" r="2" fill="rgba(42,157,143,0.3)" style="animation: alco-pulse 6s ease-in-out infinite;"></circle>
+            <circle cx="800" cy="400" r="2.5" fill="rgba(42,157,143,0.35)" style="animation: alco-pulse 5s ease-in-out infinite;"></circle>
+        </svg>
+    </div>
+    <style>
+    .alco-animated-bg {
+        position: fixed;
+        top: 0; left: 0;
+        width: 100vw; height: 100vh;
+        z-index: 0;
+        pointer-events: none;
+        background: linear-gradient(135deg, #2a9d8f 0%, #2a9d8f 25%, #264653 50%, #264653 75%, #2a9d8f 100%);
+        background-size: 400% 400%;
+        animation: alco-gradientShift 12s ease-in-out infinite;
+    }
+    @keyframes alco-gradientShift {
+        0% { background-position: 0% 50%; }
+        25% { background-position: 100% 50%; }
+        50% { background-position: 100% 50%; }
+        75% { background-position: 0% 50%; }
+        100% { background-position: 0% 50%; }
+    }
+    .alco-svg-bg {
+        position: fixed;
+        top: 0; left: 0;
+        width: 100vw; height: 100vh;
+        z-index: 1;
+        pointer-events: none;
+    }
+    .alco-bg-line {
+        stroke: rgba(42,157,143,0.3);
+        stroke-width: 1.5;
+        fill: none;
+        animation: alco-flow 15s linear infinite;
+    }
+    .alco-bg-arrow {
+        fill: rgba(42,157,143,0.3);
+        stroke: none;
+        animation: alco-arrowPulse 6s ease-in-out infinite;
+    }
+    @keyframes alco-flow {
+        0% { stroke-dasharray: 0 100; stroke-dashoffset: 0; opacity: 0.2; }
+        50% { stroke-dasharray: 50 50; stroke-dashoffset: -25; opacity: 0.4; }
+        100% { stroke-dasharray: 100 0; stroke-dashoffset: -100; opacity: 0.2; }
+    }
+    @keyframes alco-arrowPulse {
+        0%, 100% { opacity: 0.3; transform: scale(1); }
+        50% { opacity: 0.6; transform: scale(1.1); }
+    }
+    @keyframes alco-pulse {
+        0%, 100% { opacity: 0.2; }
+        50% { opacity: 0.4; }
+    }
+    body > *:not(.alco-animated-bg):not(.alco-svg-bg) {
+        position: relative;
+        z-index: 2;
+    }
+    </style>
+    <!-- End animated background -->
+    <nav class="navbar">
+        <div class="logo logo-glow">
+            {% if company and company.logo %}
+                <img src="{{ company.logo.url }}" alt="{{ company.name }} Logo" style="height:40px;vertical-align:middle;max-width:120px;object-fit:contain; margin-right:8px;">
+            {% endif %}
+            {% if company and company.name %}
+                {{ company.name }}
+            {% else %}
+                Alco Pharma Ltd.
+            {% endif %}
+        </div>
+        <ul class="nav-links">
+            <li><a href="#home">Home</a></li>
+            <li><a href="{% url 'product_list' %}">Products</a></li>
+            <li><a href="#innovation">Innovation</a></li>
+            <li><a href="#wellness">#Wellness</a></li>
+            <li><a href="#about">About Us</a></li>
+            <li><a href="#contact">Contact</a></li>
+        </ul>
+        <div class="user-profile">
+            {% if company and company.personal_profile_logo %}
+                <div class="profile-img" style="padding:0;background:transparent;">
+                    <img src="{{ company.personal_profile_logo.url }}" alt="{{ company.name }} Logo" style="height:40px;width:40px;object-fit:contain;border-radius:50%;background:transparent;">
+                </div>
+            {% else %}
+                <div class="profile-img">AP</div>
+            {% endif %}
+            <span>
+                {% if company and company.personal_profile_text %}
+                    {{ company.personal_profile_text }}
+                {% else %}
+                    Internal Login
+                {% endif %}
+            </span>
+        </div>
+    </nav>
+
+    <div class="main-container">
+        <div class="left-section">
+            <div class="recipe-badge">PRODUCT</div>
+            <div style="flex:1; display:flex; flex-direction:column; justify-content:center;">
+                <h1 class="recipe-title">
+                    {% if company and company.Homepage_middle_title_text %}
+                        {{ company.Homepage_middle_title_text }}
+                    {% else %}
+                        Innovative Healthcare Solutions
+                    {% endif %}
+                </h1>
+                <div class="rating">
+                    <div class="stars">★★★★★</div>
+                    <span>
+                        {% if company and company.rating_text %}
+                            {{ company.rating_text }}
+                        {% else %}
+                            4.9
+                        {% endif %}
+                    </span>
+                </div>
+                <p class="recipe-description">
+                    {% if company and company.Homepage_middle_details_text %}
+                        {{ company.Homepage_middle_details_text }}
+                    {% else %}
+                        Discover the next generation of pharmaceutical products designed to improve patient outcomes and enhance quality of life. Alco Pharma Ltd. is committed to delivering safe, effective, and innovative medicines for a healthier tomorrow.
+                    {% endif %}
+                </p>
+                <div class="user-info">
+                    <div class="user-avatars">
+                        {% if company and company.trusted_people_photo_first %}
+                            <div class="avatar">
+                                <img src="{{ company.trusted_people_photo_first.url }}" alt="Trusted Person" style="width:100%;height:100%;object-fit:cover;border-radius:50%;">
+                            </div>
+                        {% else %}
+                            <div class="avatar"></div>
+                        {% endif %}
+                        {% if company and company.trusted_people_photo_second %}
+                            <div class="avatar">
+                                <img src="{{ company.trusted_people_photo_second.url }}" alt="Trusted Person" style="width:100%;height:100%;object-fit:cover;border-radius:50%;">
+                            </div>
+                        {% else %}
+                            <div class="avatar"></div>
+                        {% endif %}
+                        {% if company and company.trusted_people_photo_third %}
+                            <div class="avatar">
+                                <img src="{{ company.trusted_people_photo_third.url }}" alt="Trusted Person" style="width:100%;height:100%;object-fit:cover;border-radius:50%;">
+                            </div>
+                        {% else %}
+                            <div class="avatar"></div>
+                        {% endif %}
+                    </div>
+                    <div class="user-stats">
+                        
+
+                        <div>
+                            {% if company and company.trusted_people_statement %}
+                                {{ company.trusted_people_statement|safe }}
+                            {% else %}
+                                Trusted by 10,000+ healthcare professionals<br>across the Nation
+                            {% endif %}
+                        </div>
+
+                    </div>
+                </div>
+                {# Main button logic: show video button only if use_video_as_main_button is True and video is set #}
+                {% if company.use_video_as_main_button and company.watch_video %}
+                  {% if '<iframe' in company.watch_video %}
+                    <div class="video-embed-container">
+                      {{ company.watch_video|safe }}
+                    </div>
+                  {% else %}
+                    <a href="{{ company.watch_video }}" target="_blank" rel="noopener" class="cook-button">
+                      {% if company.learn_more_button %}
+                        {{ company.learn_more_button }}
+                      {% else %}
+                        Watch Video
+                      {% endif %}
+                    </a>
+                  {% endif %}
+                {% else %}
+                  <button class="cook-button" onclick="watchVideo()">
+                    {% if company and company.learn_more_button %}
+                        {{ company.learn_more_button }}
+                    {% else %}
+                        Learn More
+                    {% endif %}
+                  </button>
+                {% endif %}
+            </div>
+        </div>
+
+        <div class="right-section">
+            <div class="circle-container">
+                <div class="cloudy-glow"></div>
+                <div class="food-circle" id="foodCircle">
+                    <img class="food-bg" id="foodImage" 
+                         src="{% if company and company.circle_photo_first %}{{ company.circle_photo_first.url }}{% else %}https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&w=400&q=80{% endif %}" 
+                         alt="Pharma Lab">
+                    <div class="circle-text" id="circleText">
+                        {% if company and company.circle_text_first %}
+                            {{ company.circle_text_first }}
+                        {% else %}
+                            Empowering Health
+                        {% endif %}
+                    </div>
+                </div>
+                <button class="slider-button" id="nextImageBtn" title="Next Image">&#8250;</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="video-popup" onclick="watchVideo()">
+        <span class="play-button" style="font-size:1.2rem;margin-right:0.5rem;">▶️</span>
+        <span style="font-weight:500;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">Watch Our Corporate Video</span>
+    </div>
+
+    <!-- Video Modal -->
+    <div class="video-modal" id="videoModal">
+        <div class="video-modal-content">
+            <div class="video-modal-header">
+                <div class="video-modal-title">
+                    {% if company and company.name %}
+                        {{ company.name }} Corporate Video
+                    {% else %}
+                        Alco Pharma Ltd. Corporate Video
+                    {% endif %}
+                </div>
+                <button class="video-modal-close" onclick="closeVideoModal()">&times;</button>
+            </div>
+            <div class="video-modal-body">
+                <iframe class="video-modal-iframe" id="videoFrame" 
+                        src="" 
+                        title="Corporate Video" 
+                        frameborder="0" 
+                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" 
+                        allowfullscreen
+                        loading="lazy">
+                </iframe>
+                <div class="video-error" id="videoError" style="display: none;">
+                    <h3>⚠️ Video Loading Error</h3>
+                    <p>Sorry, we couldn't load the video. This might be due to:</p>
+                    <ul style="text-align: left; display: inline-block;">
+                        <li>Network connectivity issues</li>
+                        <li>Video platform restrictions</li>
+                        <li>Browser security settings</li>
+                    </ul>
+                    <p style="margin-top: 1rem;">
+                        <a href="#" id="openVideoLink" target="_blank">Open video in new tab</a>
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Move .bottom-recipes to just above the footer -->
+    <div class="bottom-recipes">
+        <div class="recipe-card" onclick="selectRecipe('product1')">
+            {% if company and company.lower_buttons_photo_first %}
+                <img src="{{ company.lower_buttons_photo_first.url }}" alt="Button 1" class="recipe-card-img">
+            {% else %}
+                <img src="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNTAiIGhlaWdodD0iNTAiIHZpZXdCb3g9IjAgMCA1MCA1MCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPGNpcmNsZSBjeD0iMjUiIGN5PSIyNSIgcj0iMjUiIGZpbGw9IiNGRkY1RUUiLz4KPGNpcmNsZSBjeD0iMjUiIGN5PSIyNSIgcj0iMjAiIGZpbGw9IiNGRkZGRkYiLz4KPC9zdmc+Cg==" alt="Capsule" class="recipe-card-img">
+            {% endif %}
+            <div class="recipe-card-info">
+                <h4>
+                    {% if company and company.lower_buttons_title_text_first %}
+                        {{ company.lower_buttons_title_text_first }}
+                    {% else %}
+                        AlcoVita Plus
+                    {% endif %}
+                </h4>
+                <p>
+                    {% if company and company.lower_buttons_small_display_text_first %}
+                        {{ company.lower_buttons_small_display_text_first }}
+                    {% else %}
+                        ⭐ 4.9 (1,320 Reviews)
+                    {% endif %}
+                </p>
+            </div>
+        </div>
+        <div class="recipe-card" onclick="selectRecipe('product2')">
+            {% if company and company.lower_buttons_photo_second %}
+                <img src="{{ company.lower_buttons_photo_second.url }}" alt="Button 2" class="recipe-card-img">
+            {% else %}
+                <img src="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNTAiIGhlaWdodD0iNTAiIHZpZXdCb3g9IjAgMCA1MCA1MCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPGNpcmNsZSBjeD0iMjUiIGN5PSIyNSIgcj0iMjUiIGZpbGw9IiNEMkI0OEMiLz48L3N2Zz4K" alt="Tablet" class="recipe-card-img">
+            {% endif %}
+            <div class="recipe-card-info">
+                <h4>
+                    {% if company and company.lower_buttons_title_text_second %}
+                        {{ company.lower_buttons_title_text_second }}
+                    {% else %}
+                        AlcoCare Tablets
+                    {% endif %}
+                </h4>
+                <p>
+                    {% if company and company.lower_buttons_small_display_text_second %}
+                        {{ company.lower_buttons_small_display_text_second }}
+                    {% else %}
+                        ⭐ 4.8 (980 Reviews)
+                    {% endif %}
+                </p>
+            </div>
+        </div>
+        <div class="recipe-card" onclick="selectRecipe('product3')">
+            {% if company and company.lower_buttons_photo_third %}
+                <img src="{{ company.lower_buttons_photo_third.url }}" alt="Button 3" class="recipe-card-img">
+            {% else %}
+                <img src="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNTAiIGhlaWdodD0iNTAiIHZpZXdCb3g9IjAgMCA1MCA1MCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPGNpcmNsZSBjeD0iMjUiIGN5PSIyNSIgcj0iMjUiIGZpbGw9IiM4QkMzNEEiLz48L3N2Zz4K" alt="Syrup" class="recipe-card-img">
+            {% endif %}
+            <div class="recipe-card-info">
+                <h4>
+                    {% if company and company.lower_buttons_title_text_third %}
+                        {{ company.lower_buttons_title_text_third }}
+                    {% else %}
+                        AlcoSyrup Forte
+                    {% endif %}
+                </h4>
+                <p>
+                    {% if company and company.lower_buttons_small_display_text_third %}
+                        {{ company.lower_buttons_small_display_text_third }}
+                    {% else %}
+                        ⭐ 4.7 (1,560 Reviews)
+                    {% endif %}
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <footer class="site-footer">
+        <div class="footer-content">
+            <div class="footer-section">
+                <strong>Alco Pharma Ltd.</strong><br>
+                Jl. Kesehatan No. 123, Jakarta, Indonesia<br>
+                Phone: +62 812-3456-7890<br>
+                Email: info@alcopharma.com
+            </div>
+            <div class="footer-section">
+                &copy; 2025 Alco Pharma Ltd. All rights reserved.
+            </div>
+        </div>
+    </footer>
+
+    {{ images_json|json_script:"images-data" }}
+    {{ watch_video_embed|json_script:"watch-video-data" }}
+    <script>
+        // Get video data from Django template
+        const watchVideoData = JSON.parse(document.getElementById('watch-video-data').textContent);
+        
+        // Keyboard accessibility and mouse delay for dropdown
+        document.addEventListener('DOMContentLoaded', function() {
+            const dropdown = document.querySelector('.nav-links .dropdown');
+            if (!dropdown) return;
+            const dropdownToggle = dropdown.querySelector('.dropdown-toggle');
+            const dropdownMenu = dropdown.querySelector('.dropdown-menu');
+            let dropdownTimeout = null;
+
+            // Keyboard navigation
+            dropdownToggle.addEventListener('keydown', function(e) {
+                if (e.key === 'Enter' || e.key === ' ' || e.key === 'ArrowDown') {
+                    e.preventDefault();
+                    dropdownMenu.style.display = 'flex';
+                    dropdownMenu.querySelector('a').focus();
+                }
+            });
+            dropdownMenu.addEventListener('keydown', function(e) {
+                const items = Array.from(dropdownMenu.querySelectorAll('a'));
+                let idx = items.indexOf(document.activeElement);
+                if (e.key === 'ArrowDown') {
+                    e.preventDefault();
+                    items[(idx + 1) % items.length].focus();
+                } else if (e.key === 'ArrowUp') {
+                    e.preventDefault();
+                    items[(idx - 1 + items.length) % items.length].focus();
+                } else if (e.key === 'Escape') {
+                    dropdownMenu.style.display = 'none';
+                    dropdownToggle.focus();
+                }
+            });
+
+            // Mouse hover with delay
+            dropdown.addEventListener('mouseenter', function() {
+                if (dropdownTimeout) clearTimeout(dropdownTimeout);
+                dropdownMenu.style.display = 'flex';
+            });
+            dropdown.addEventListener('mouseleave', function() {
+                dropdownTimeout = setTimeout(() => {
+                    dropdownMenu.style.display = '';
+                }, 200);
+            });
+            dropdownMenu.addEventListener('mouseenter', function() {
+                if (dropdownTimeout) clearTimeout(dropdownTimeout);
+                dropdownMenu.style.display = 'flex';
+            });
+            dropdownMenu.addEventListener('mouseleave', function() {
+                dropdownTimeout = setTimeout(() => {
+                    dropdownMenu.style.display = '';
+                }, 200);
+            });
+        });
+
+        // Image slider logic
+        const images = JSON.parse(document.getElementById('images-data').textContent);
+
+        let currentImage = 0;
+        const foodImage = document.getElementById('foodImage');
+        const circleText = document.getElementById('circleText');
+        const nextImageBtn = document.getElementById('nextImageBtn');
+        nextImageBtn.addEventListener('click', () => {
+            currentImage = (currentImage + 1) % images.length;
+            foodImage.src = images[currentImage].src;
+            circleText.textContent = images[currentImage].text;
+        });
+
+        function startCooking() {
+            alert('Thank you for your interest in Alco Pharma Ltd. products! Our representative will contact you soon.');
+            // Add pharma-specific action or redirect
+        }
+
+        function likeRecipe() {
+            const icon = event.target;
+            icon.style.transform = 'scale(1.5)';
+            icon.style.color = '#27ae60';
+            setTimeout(() => {
+                icon.style.transform = 'scale(1)';
+            }, 200);
+        }
+
+        function shareRecipe() {
+            if (navigator.share) {
+                navigator.share({
+                    title: 'Alco Pharma Ltd. | Innovative Healthcare Solutions',
+                    text: 'Discover Alco Pharma Ltd. and our innovative pharmaceutical products!',
+                    url: window.location.href
+                });
+            } else {
+                alert('Product link copied to clipboard!');
+            }
+        }
+
+        function saveRecipe() {
+            const icon = event.target;
+            icon.style.color = '#2980b9';
+            alert('Product saved to your favorites! 💙');
+        }
+
+        function commentRecipe() {
+            alert('Contact us for more information about our products.');
+        }
+
+        function watchVideo() {
+            const modal = document.getElementById('videoModal');
+            const frame = document.getElementById('videoFrame');
+            const errorDiv = document.getElementById('videoError');
+            const openVideoLink = document.getElementById('openVideoLink');
+            
+            if (watchVideoData) {
+                let videoUrl = watchVideoData;
+                
+                // Hide any previous error
+                errorDiv.style.display = 'none';
+                frame.style.display = 'block';
+                
+                // Add appropriate parameters for different video platforms
+                if (videoUrl.includes('youtube.com/embed/')) {
+                    videoUrl += '?autoplay=1&rel=0';
+                } else if (videoUrl.includes('vimeo.com/video/')) {
+                    videoUrl += '?autoplay=1&title=0&byline=0&portrait=0';
+                } else if (videoUrl.includes('dailymotion.com/embed/')) {
+                    videoUrl += '?autoplay=1';
+                } else if (videoUrl.includes('facebook.com/plugins/video.php')) {
+                    // Facebook videos need special handling
+                    if (!videoUrl.includes('autoplay=1')) {
+                        videoUrl += '&autoplay=1';
+                    }
+                } else if (videoUrl.includes('player.twitch.tv/')) {
+                    // Twitch videos need parent domain for security
+                    if (!videoUrl.includes('parent=')) {
+                        videoUrl += '&parent=' + window.location.hostname;
+                    }
+                }
+                
+                // Set up error handling
+                frame.onload = function() {
+                    clearTimeout(loadTimeout);
+                    // Video loaded successfully
+                    console.log('Video loaded successfully');
+                };
+                
+                frame.onerror = function() {
+                    showVideoError(videoUrl);
+                };
+                
+                // Set up timeout for video loading
+                const loadTimeout = setTimeout(() => {
+                    // Check if iframe has content or if it's still loading
+                    try {
+                        if (frame.contentDocument && frame.contentDocument.readyState === 'complete') {
+                            // Video loaded successfully
+                            clearTimeout(loadTimeout);
+                        } else {
+                            // Show error after timeout
+                            showVideoError(videoUrl);
+                        }
+                    } catch (e) {
+                        // Cross-origin error, check if iframe is accessible
+                        try {
+                            // Try to access iframe properties
+                            if (frame.contentWindow) {
+                                clearTimeout(loadTimeout);
+                            } else {
+                                showVideoError(videoUrl);
+                            }
+                        } catch (e) {
+                            showVideoError(videoUrl);
+                        }
+                    }
+                }, 10000); // 10 second timeout
+                
+                // Try to open the modal
+                try {
+                    frame.src = videoUrl;
+                    modal.classList.add('active');
+                    document.body.style.overflow = 'hidden'; // Prevent background scrolling
+                    
+                    // Set up the "open in new tab" link
+                    openVideoLink.href = videoUrl;
+                    openVideoLink.onclick = function(e) {
+                        e.preventDefault();
+                        const newWindow = window.open(videoUrl, '_blank');
+                        if (!newWindow || newWindow.closed || typeof newWindow.closed === 'undefined') {
+                            // Popup was blocked, open in same window
+                            window.location.href = videoUrl;
+                        }
+                    };
+                } catch (e) {
+                    console.error('Error opening video modal:', e);
+                    // If modal fails, try opening in new tab
+                    const newWindow = window.open(videoUrl, '_blank');
+                    if (!newWindow || newWindow.closed || typeof newWindow.closed === 'undefined') {
+                        // Popup was blocked, open in same window
+                        window.location.href = videoUrl;
+                    }
+                }
+            } else {
+                alert('No video available at the moment. Please check back later.');
+            }
+        }
+        
+        function showVideoError(originalUrl) {
+            const frame = document.getElementById('videoFrame');
+            const errorDiv = document.getElementById('videoError');
+            const openVideoLink = document.getElementById('openVideoLink');
+            
+            // Hide iframe and show error
+            frame.style.display = 'none';
+            errorDiv.style.display = 'block';
+            
+            // Set up the "open in new tab" link with original URL
+            openVideoLink.href = originalUrl;
+            openVideoLink.onclick = function(e) {
+                e.preventDefault();
+                window.open(originalUrl, '_blank');
+            };
+        }
+
+        function closeVideoModal() {
+            const modal = document.getElementById('videoModal');
+            const frame = document.getElementById('videoFrame');
+            const errorDiv = document.getElementById('videoError');
+            
+            modal.classList.remove('active');
+            frame.src = ''; // Stop video playback
+            frame.style.display = 'block'; // Reset iframe display
+            errorDiv.style.display = 'none'; // Hide error message
+            document.body.style.overflow = ''; // Restore scrolling
+        }
+
+        // Close modal when clicking outside
+        document.getElementById('videoModal').addEventListener('click', function(e) {
+            if (e.target === this) {
+                closeVideoModal();
+            }
+        });
+
+        // Close modal with Escape key
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape') {
+                const modal = document.getElementById('videoModal');
+                if (modal.classList.contains('active')) {
+                    closeVideoModal();
+                }
+            }
+        });
+
+        function selectRecipe(type) {
+            const products = {
+                'product1': 'AlcoVita Plus',
+                'product2': 'AlcoCare Tablets',
+                'product3': 'AlcoSyrup Forte'
+            };
+            alert(`Switching to ${products[type]} details!`);
+        }
+
+        // Navbar shrink on scroll
+        const navbar = document.querySelector('.navbar');
+        window.addEventListener('scroll', () => {
+            if (window.scrollY > 0) {
+                navbar.classList.add('shrink');
+            } else {
+                navbar.classList.remove('shrink');
+            }
+        });
+
+        // Add smooth scrolling and hover effects
+        document.querySelectorAll('.recipe-card').forEach(card => {
+            card.addEventListener('mouseenter', () => {
+                card.style.transform = 'translateY(-5px) scale(1.05)';
+            });
+            card.addEventListener('mouseleave', () => {
+                card.style.transform = 'translateY(0) scale(1)';
+            });
+        });
+
+        // Add typing effect to title
+        function typeWriter(element, text, speed = 50) {
+            let i = 0;
+            element.innerHTML = '';
+            function type() {
+                if (i < text.length) {
+                    element.innerHTML += text.charAt(i);
+                    i++;
+                    setTimeout(type, speed);
+                }
+            }
+            type();
+        }
+
+        // Initialize typing effect
+        window.addEventListener('load', () => {
+            const title = document.querySelector('.recipe-title');
+            const originalText = title.textContent;
+            typeWriter(title, originalText, 100);
+        });
+        
+        // Fade out video-popup after 5 seconds of scrolling
+        let videoPopupTimeout = null;
+        let videoPopupHidden = false;
+        const videoPopup = document.querySelector('.video-popup');
+        function hideVideoPopup() {
+            if (videoPopup && !videoPopupHidden) {
+                videoPopup.classList.add('hide');
+                videoPopupHidden = true;
+            }
+        }
+        function showVideoPopup() {
+            if (videoPopup && videoPopupHidden) {
+                videoPopup.classList.remove('hide');
+                videoPopupHidden = false;
+            }
+        }
+        window.addEventListener('scroll', () => {
+            if (window.scrollY > 0) {
+                if (!videoPopupHidden) {
+                    if (videoPopupTimeout) clearTimeout(videoPopupTimeout);
+                    videoPopupTimeout = setTimeout(hideVideoPopup, 5000);
+                }
+            } else {
+                if (videoPopupHidden) {
+                    showVideoPopup();
+                }
+                if (videoPopupTimeout) clearTimeout(videoPopupTimeout);
+            }
+        });
+        
+        // Fade .bottom-recipes after 10 seconds, restore on hover
+        let bottomRecipesTimeout = null;
+        const bottomRecipes = document.querySelector('.bottom-recipes');
+        function fadeBottomRecipes() {
+            if (bottomRecipes) bottomRecipes.classList.add('faded');
+        }
+        function showBottomRecipes() {
+            if (bottomRecipes) bottomRecipes.classList.remove('faded');
+        }
+        // Start timer on load for bottom-recipes only
+        window.addEventListener('load', () => {
+            if (bottomRecipesTimeout) clearTimeout(bottomRecipesTimeout);
+            bottomRecipesTimeout = setTimeout(fadeBottomRecipes, 10000);
+        });
+        // Show on hover, fade on mouseleave for bottom-recipes
+        if (bottomRecipes) {
+            bottomRecipes.addEventListener('mouseenter', () => {
+                showBottomRecipes();
+                if (bottomRecipesTimeout) clearTimeout(bottomRecipesTimeout);
+            });
+            bottomRecipes.addEventListener('mouseleave', () => {
+                bottomRecipesTimeout = setTimeout(fadeBottomRecipes, 700);
+            });
+            // Also handle focus for accessibility
+            bottomRecipes.addEventListener('focusin', showBottomRecipes);
+            bottomRecipes.addEventListener('focusout', () => {
+                bottomRecipesTimeout = setTimeout(fadeBottomRecipes, 700);
+            });
+        }
+    </script>
+</body>
+</html>

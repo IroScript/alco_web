@@ -1,0 +1,49 @@
+{% extends 'base.html' %}
+
+{% block title %}Manufacturing Facilities - Alco Pharma Ltd.{% endblock %}
+
+{% block content %}
+<style>
+    .manufacturing-container {
+        display: flex;
+        padding: 4rem 2rem;
+        max-width: 1200px;
+        margin: auto;
+        gap: 2rem;
+        align-items: flex-start;
+    }
+    .manufacturing-image {
+        flex: 1;
+    }
+    .manufacturing-image img {
+        width: 100%;
+        border-radius: 12px;
+    }
+    .manufacturing-details {
+        flex: 1;
+        padding-left: 2rem;
+    }
+    .manufacturing-details h1 {
+        font-size: 2.5rem;
+        color: #3498db;
+        margin-bottom: 1.5rem;
+    }
+    .manufacturing-details p {
+        font-size: 1.1rem;
+        line-height: 1.6;
+        margin-bottom: 1rem;
+    }
+</style>
+
+<div class="manufacturing-container">
+    <div class="manufacturing-image">
+        <img src="https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&w=400&q=80" alt="Manufacturing Facilities">
+    </div>
+    <div class="manufacturing-details">
+        <h1>MANUFACTURING FACILITIES</h1>
+        <p>Alco Pharma has a state of the art pharmaceutical facility, a three-storied building with a foundation of seven storied and 8000 sq.ft. per floor, at Mirpur, Dhaka. Our manufacturing facilities utilize highly sophisticated machineries and equipments that enable us to produce the best in class pharmaceutical products that we are committed to our patients and caregivers.</p>
+        <p>Alco Pharma has a broad range of pharmaceutical formulations like Tablet, Capsule, Oral Liquid/ PFS, Topical Cream/Ointment/Powder.</p>
+        <p>At present our Tablet production capacity is 500 million units and capsule production capacity is 175 million units per annum. Liquid/ Dry syrup production capacity is 35 million units and Cream/Ointment production capacity is 8 million units per annum.</p>
+    </div>
+</div>
+{% endblock %}
