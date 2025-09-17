@@ -1,1 +1,128 @@
+<!DOCTYPE html> 
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Horizontally Flipped Connected Lines</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 20px;
+            background: #f5f5f5;
+        }
 
+        svg {
+            width: 100%;
+            height: 400px;
+            background: white;
+            border: 1px solid #ddd;
+        }
+
+        .line {
+            fill: none;
+            stroke: #333;
+            stroke-width: 0.2; /* reduced by 90% */
+        }
+    </style>
+</head>
+<body>
+    <svg viewBox="0 0 520 512">
+        <!-- Green gradient regions -->
+
+        <!-- Lightest green -->
+        <path d="M 380 0 Q 180 256 280 448 Q 200 256 300 0 Z" fill="#82bfa4"/>
+
+        <!-- Lighter green -->
+        <path d="M 300 0 Q 200 256 280 448 Q 200 256 220 0 Z" fill="#559b78"/>
+
+        <!-- Medium green -->
+        <path d="M 220 0 Q 200 256 280 448 Q 160 256 330 512 Q 140 286 140 0 Z" fill="#2d7851"/>
+
+        <!-- Deepest green -->
+        <path d="M 140 0 Q 140 286 330 512 L 0 512 L 0 0 Z" fill="#005f2f"/>
+
+        <!-- Outer box -->
+        <rect x="0" y="0" width="520" height="512" fill="none" stroke="#333" stroke-width="2"/>
+
+        <!-- Curved lines with very thin stroke -->
+        <path d="M 380 0 Q 180 256 280 448" class="line"/>
+        <path d="M 300 0 Q 200 256 280 448" class="line"/>
+        <path d="M 220 0 Q 200 256 280 448" class="line"/>
+        <path d="M 140 0 Q 140 286 330 512" class="line"/>
+    </svg>
+</body>
+</html>
+
+
+
+
+<!-- VERSION 1: FUTURISTIC CYAN-BLUE GRADIENT -->
+<svg viewBox="0 0 520 512" style="width: 100%; height: 400px; background: white; border: 1px solid #ddd;">
+    <!-- Lightest -->
+    <path d="M 380 0 Q 180 256 280 448 Q 200 256 300 0 Z" fill="#a5f3fc"/>
+    
+    <!-- Lighter -->
+    <path d="M 300 0 Q 200 256 280 448 Q 200 256 220 0 Z" fill="#06b6d4"/>
+    
+    <!-- Medium -->
+    <path d="M 220 0 Q 200 256 280 448 Q 160 256 330 512 Q 140 286 140 0 Z" fill="#1e3a8a"/>
+    
+    <!-- Deepest -->
+    <path d="M 140 0 Q 140 286 330 512 L 0 512 L 0 0 Z" fill="#0f172a"/>
+
+    <!-- Box -->
+    <rect x="0" y="0" width="520" height="512" fill="none" stroke="#333" stroke-width="2"/>
+
+    <!-- Thin lines -->
+    <path d="M 380 0 Q 180 256 280 448" stroke="#333" stroke-width="0.2" fill="none"/>
+    <path d="M 300 0 Q 200 256 280 448" stroke="#333" stroke-width="0.2" fill="none"/>
+    <path d="M 220 0 Q 200 256 280 448" stroke="#333" stroke-width="0.2" fill="none"/>
+    <path d="M 140 0 Q 140 286 330 512" stroke="#333" stroke-width="0.2" fill="none"/>
+</svg>
+
+
+
+<!-- VERSION 2: PINK-PEACH GRADIENT -->
+<svg viewBox="0 0 520 512" style="width: 100%; height: 400px; background: white; border: 1px solid #ddd;">
+    <!-- Lightest -->
+    <path d="M 380 0 Q 180 256 280 448 Q 200 256 300 0 Z" fill="#ffe4e6"/>
+    
+    <!-- Lighter -->
+    <path d="M 300 0 Q 200 256 280 448 Q 200 256 220 0 Z" fill="#fda4af"/>
+    
+    <!-- Medium -->
+    <path d="M 220 0 Q 200 256 280 448 Q 160 256 330 512 Q 140 286 140 0 Z" fill="#ec4899"/>
+    
+    <!-- Deepest -->
+    <path d="M 140 0 Q 140 286 330 512 L 0 512 L 0 0 Z" fill="#881337"/>
+
+    <!-- Box -->
+    <rect x="0" y="0" width="520" height="512" fill="none" stroke="#333" stroke-width="2"/>
+
+    <!-- Thin lines -->
+    <path d="M 380 0 Q 180 256 280 448" stroke="#333" stroke-width="0.2" fill="none"/>
+    <path d="M 300 0 Q 200 256 280 448" stroke="#333" stroke-width="0.2" fill="none"/>
+    <path d="M 220 0 Q 200 256 280 448" stroke="#333" stroke-width="0.2" fill="none"/>
+    <path d="M 140 0 Q 140 286 330 512" stroke="#333" stroke-width="0.2" fill="none"/>
+</svg>
+
+
+
+<!-- VERSION 3: SUNSET FLAME (Red-Orange-Yellow) -->
+<svg viewBox="0 0 520 512" style="width: 100%; height: 400px; background: white; border: 1px solid #ddd;">
+    <path d="M 380 0 Q 180 256 280 448 Q 200 256 300 0 Z" fill="#fcd34d"/>   <!-- Lightest -->
+    <path d="M 300 0 Q 200 256 280 448 Q 200 256 220 0 Z" fill="#fb923c"/>   <!-- Lighter -->
+    <path d="M 220 0 Q 200 256 280 448 Q 160 256 330 512 Q 140 286 140 0 Z" fill="#f43f5e"/> <!-- Medium -->
+    <path d="M 140 0 Q 140 286 330 512 L 0 512 L 0 0 Z" fill="#991b1b"/>    <!-- Deepest -->
+
+    <rect x="0" y="0" width="520" height="512" fill="none" stroke="#333" stroke-width="2"/>
+    <path d="M 380 0 Q 180 256 280 448" stroke="#333" stroke-width="0.2" fill="none"/>
+    <path d="M 300 0 Q 200 256 280 448" stroke="#333" stroke-width="0.2" fill="none"/>
+    <path d="M 220 0 Q 200 256 280 448" stroke="#333" stroke-width="0.2" fill="none"/>
+    <path d="M 140 0 Q 140 286 330 512" stroke="#333" stroke-width="0.2" fill="none"/>
+</svg>
+
+
+
+
+https://chatgpt.com/share/68ca8559-952c-8001-bb0d-49e4eb527735
